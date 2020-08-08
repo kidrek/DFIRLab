@@ -1,0 +1,70 @@
+{
+  "builders": [
+    {
+      "type": "vmware-iso",
+      "name": "template-Win10",
+      "vm_name": "template-Win10",
+      "cpus":"4",
+      "memory":"2048",
+      "Version": "12",
+      "skip_compaction": true,
+      "guest_os_type": "windows9-64",
+      "vmx_data": {
+        "ethernet0.networkName": "<portgroup>",
+        "ethernet0.virtualDev": "e1000",
+        "ethernet0.present": "TRUE",
+        "virtualHW.version": "10",
+        "scsi0.virtualDev": "lsisas1068"
+      },
+
+      "remote_type": "esx5",
+      "remote_host": "<esxi_host>",
+      "remote_username": "<esxi_user>",
+      "remote_password": "<esxi_password>",
+      "remote_datastore": "<esxi_datastore>",
+      "skip_validate_credentials": true,
+      "format": "ova",
+      "output_directory": "./ova/",
+
+      "winrm_port": "5985",
+      "iso_urls": [
+         "../ISO/win10_19041.264.200511-0456.vb_release_svc_refresh_CLIENTENTERPRISEEVAL_OEMRET_x64FRE_en-us.iso",
+         "../ISO--drivers/VMware-Tools-windows-11.0.0-14549434/vmtools/windows.iso"
+      ],
+      "iso_checksum": "md5:e85637e135e9b6dbc5fa02b463a95764",
+      "boot_wait": "6m",
+
+      "communicator": "winrm",
+      "winrm_username": "analyste",
+      "winrm_password": "analyste",
+      "winrm_timeout": "2h",
+      "shutdown_command": "shutdown /s /t 10 /f /d p:4:1 /c \"Packer shutdown\"",
+      "shutdown_timeout": "30m",
+      "floppy_label": "A",
+      "floppy_files": [
+        "./Autounattend.xml",
+        "../SCRIPTS/disable-windows-update.ps1",
+        "../SCRIPTS/fixnetwork.ps1",
+        "../SCRIPTS/disable-winrm.ps1",
+        "../SCRIPTS/enable-winrm.ps1",
+        "../SCRIPTS/chocolatey.ps1"
+      ],
+      "floppy_dirs": "../ISO--drivers/VMware-Tools-windows-11.0.0-14549434/floppies/",
+      "headless": true,
+      "disable_vnc": true,
+      "vnc_disable_password": true,
+      "vnc_bind_address": "127.0.0.1",
+      "keep_registered": true
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "powershell",
+      "inline": [
+        "choco install -y 7zip putty filezilla firefoxesr vlc vscode",
+        "choco install -y git python2 python3 golang",
+        "choco install -y adobereader"
+      ]
+    }
+  ]
+}
