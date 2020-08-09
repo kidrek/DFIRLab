@@ -6,7 +6,7 @@ https://www.microsoft.com/en-us/evalcenter/evaluate-windows-10-enterprise.
 J'ai choisi pour mon projet les caractéristiques suivantes : 
 * Architecture : 64Bits
 * Version : Enterprise
-* Licence : La licence est valide pour une durée de 90jours
+* Licence : La licence est valide pour une durée de 90jours. Cette durée limitée n'est pas problématique. Les plateformes étant ephémères, les templates seront générés tous les 2mois afin de pallier tout problème à l'usage. 
 
 L'iso correspondant à ces caractéristiques peut être téléchargé via l'url : 
 https://software-download.microsoft.com/download/pr/19041.264.200511-0456.vb_release_svc_refresh_CLIENTENTERPRISEEVAL_OEMRET_x64FRE_en-us.iso
