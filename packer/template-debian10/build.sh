@@ -13,6 +13,9 @@ rm -f build.log
 password=`../SCRIPTS/generate-password.sh`
 sed "s/<password>/$password/" ./http/preseed.cfg.tpl > ./http/preseed.cfg
 
+## Generate new ansible SSH keys
+yes yes | ssh-keygen -q -t rsa -N "" -f ../FILES/ansible.key -b 4096 -C "ansible@pin.local"
+
 ## Generate new ova
 export PACKER_LOG=1; packer build debian10.json | tee -a build.log
 if [ `tail -n 50 build.log | egrep "Failed to prepare build|Builds finished but no artifacts were created" | grep -v "grep" | wc -l` -eq 0 ]; then
