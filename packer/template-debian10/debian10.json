@@ -23,7 +23,7 @@
       "remote_datastore": "<esxi_datastore>",
       "skip_validate_credentials": true,
       "format": "ova",
-      "output_directory": "./ova/",
+      "output_directory": "../ova/",
 
       "iso_url": "../ISO/debian-10.5.0-amd64-netinst.iso",
       "iso_checksum": "md5:a3ebc76aec372808ad80000108a2593a",
@@ -44,6 +44,14 @@
       "vnc_disable_password": true,
       "vnc_bind_address": "127.0.0.1",
       "keep_registered": true
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+	      "sudo apt install -y open-vm-tools htop net-tools"
+	    ]
     }
   ]
 }
