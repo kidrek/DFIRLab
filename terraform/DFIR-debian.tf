@@ -1,8 +1,8 @@
 resource "esxi_guest" "pin-debian-tools" {
   count                 = 1
-  guest_name            = "PIN-${count.index + 1}-DebianTools"
-  notes                 = "Contact : me"
-  disk_store            = "datastore1"
+  guest_name            = "PIN-${count.index + 1}-DFIR-debian"
+  notes                 = "Contact : <contact_data>"
+  disk_store            = "<esx_datastore>"
   boot_disk_type        = "thin"
   #boot_disk_size        = "100"
   memsize               = "2048"
@@ -10,7 +10,7 @@ resource "esxi_guest" "pin-debian-tools" {
   power                 = "on"
   guest_startup_timeout = "180"
 
-  ovf_source = "../ovf-template/debian.ova"
+  ovf_source = "../packer/ova/template-Debian10.ova"
 
   network_interfaces {
     virtual_network = "Terraform-deployment"
@@ -26,7 +26,7 @@ resource "esxi_guest" "pin-debian-tools" {
     host        = self.ip_address
     type        = "ssh"
     user        = "ansible"
-    private_key = file("./ansible-key")
+    private_key = file("../packer/FILES/ansible.key")
     timeout     = "180s"
   }
 
