@@ -33,3 +33,5 @@ Créer l'arborescence ci-dessous afin d'y placer le provider nouvellement géné
 mkdir -p terraform.d/plugins/linux_amd64
 mv terraform-provider-esxi_v1.6.4 terraform.d/plugins/linux_amd64
 ```
+
+L'initialisation du répertoire se fait à travers l'exécution de la commande : ```terraform init```.
