@@ -65,12 +65,12 @@ d-i partman/confirm_write_new_label boolean true
 
 # User configuration
 d-i passwd/root-login boolean true
-d-i passwd/root-password-again password <password>
-d-i passwd/root-password password <password>
+d-i passwd/root-password-again password <password_root>
+d-i passwd/root-password password <password_root>
 d-i passwd/user-fullname string ansible
 d-i passwd/user-uid string 1000
-d-i passwd/user-password password ansible
-d-i passwd/user-password-again password ansible
+d-i passwd/user-password password <password_ansible>
+d-i passwd/user-password-again password <password_ansible>
 d-i passwd/username string ansible
 
 # Extra packages to be installed
@@ -105,4 +105,4 @@ tasksel tasksel/first multiselect standard, ssh-server
 
 # Setup passwordless sudo for packer user
 d-i preseed/late_command string \
-  echo "ansible ALL=(ALL:ALL) NOPASSWD:ALL" > /target/etc/sudoers.d/ansible && chmod 0440 /target/etc/sudoers.d/ansible
+in-target sh -c 'echo "ansible ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers.d/ansible ; chmod 0440 /etc/sudoers.d/ansible ; echo "AuthorizedKeysFile .ssh/authorized_keys" >> /etc/ssh/sshd_config; sed -i "s/ChallengeResponseAuthentication no/ChallengeResponseAuthentication yes/" /etc/ssh/sshd_config; echo "PubkeyAuthentication yes" >> /etc/ssh/sshd_config ; echo "PasswordAuthentication no" >> /etc/ssh/sshd_config ; echo "PermitEmptyPasswords no" >> /etc/ssh/sshd_config ; mkdir -p /home/ansible/.ssh ; echo "<ansible_ssh_key>" > /home/ansible/.ssh/authorized_keys ; chmod 700 -R /home/ansible/.ssh ; chown -R ansible: /home/ansible/.ssh'
