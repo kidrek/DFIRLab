@@ -11,6 +11,7 @@ Une fois décompressé, celui-ci devra être déplacé dans un des répertoires 
 ## Installation
 
 ``` 
+wget https://releases.hashicorp.com/terraform/0.12.29/terraform_0.12.29_linux_amd64.zip
 unzip terraform_0.12.29_linux_amd64.zip
 mv terraform /usr/bin/
 
