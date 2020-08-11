@@ -5,7 +5,7 @@
       "communicator": "winrm",
       "winrm_port": "5985",
       "skip_compaction": "false",
-      "output_directory": "/media/analyste/4b1e2b12-0d2d-48c5-812c-761c943b7f09/PACKER-cuckooVM/win10",
+      "output_directory": "../ova/PACKER-cuckooVM/win10",
       "format": "qcow2",
       "disk_size": "20480",
       "accelerator": "kvm",
@@ -14,7 +14,7 @@
       "qemuargs": [
         [
           "-drive",
-          "file=/media/analyste/4b1e2b12-0d2d-48c5-812c-761c943b7f09/PACKER-cuckooVM/win10/{{ .Name }},if=virtio,cache=writeback,discard=ignore,format=qcow2,index=1"
+          "file=../ova/PACKER-cuckooVM/win10/{{ .Name }},if=virtio,cache=writeback,discard=ignore,format=qcow2,index=1"
         ],
         [
           "-drive",
