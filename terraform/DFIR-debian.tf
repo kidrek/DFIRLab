@@ -13,7 +13,7 @@ resource "esxi_guest" "pin-debian-tools" {
   ovf_source = "../packer/ova/template-Debian10.ova"
 
   network_interfaces {
-    virtual_network = "Terraform-deployment"
+    virtual_network = "<portgroup--terraform-deployment>"
     nic_type        = "e1000"
   }
 
