@@ -1,4 +1,4 @@
-resource "esxi_guest" "pin-debian-tools" {
+resource "esxi_guest" "pin-dfir-debian" {
   count                 = 1
   guest_name            = "PIN-${count.index + 1}-DFIR-debian"
   notes                 = "Contact : <contact_data>"
