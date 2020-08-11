@@ -26,7 +26,7 @@
       "remote_datastore": "<esxi_datastore>",
       "skip_validate_credentials": true,
       "format": "ova",
-      "output_directory": "./ova/",
+      "output_directory": "../ova/",
 
       "winrm_port": "5985",
       "iso_url": "../ISO/win10_19041.264.200511-0456.vb_release_svc_refresh_CLIENTENTERPRISEEVAL_OEMRET_x64FRE_en-us.iso",
