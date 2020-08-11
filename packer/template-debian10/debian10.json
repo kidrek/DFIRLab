@@ -36,7 +36,8 @@
       ],
       "http_directory": "http",
       "ssh_username":"ansible",
-      "ssh_password":"ansible",
+      "ssh_private_key_file":"../FILES/ansible.key",
+      "ssh_keypair_name":"ansible.key",
       "ssh_wait_timeout": "1800s",
 
       "shutdown_command": "echo Packer | sudo -S shutdown -P now",
@@ -50,14 +51,9 @@
     {
       "type": "shell",
       "inline": [
-	"sudo apt install -y open-vm-tools htop net-tools",
-        "mkdir -p /home/ansible/.ssh"
-	]
-    },
-    {
-      "type": "file",
-      "source": "../FILES/ansible.key.pub",
-      "destination": "/home/ansible/.ssh/authorized_keys"
+        "sudo apt update && sudo apt upgrade -y",
+        "sudo apt install -y open-vm-tools htop net-tools"
+        ]
     }
   ]
 }
