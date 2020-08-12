@@ -67,11 +67,11 @@ d-i partman/confirm_write_new_label boolean true
 d-i passwd/root-login boolean true
 d-i passwd/root-password-again password <password_root>
 d-i passwd/root-password password <password_root>
-d-i passwd/user-fullname string ansible
+d-i passwd/user-fullname string analyste
 d-i passwd/user-uid string 1000
-d-i passwd/user-password password <password_ansible>
-d-i passwd/user-password-again password <password_ansible>
-d-i passwd/username string ansible
+d-i passwd/user-password password <password_analyste>
+d-i passwd/user-password-again password <password_analyste>
+d-i passwd/username string analyste
 
 # Extra packages to be installed
 d-i pkgsel/include string sudo
@@ -105,4 +105,4 @@ tasksel tasksel/first multiselect standard, ssh-server
 
 # Setup passwordless sudo for packer user
 d-i preseed/late_command string \
-in-target sh -c 'echo "ansible ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers.d/ansible ; chmod 0440 /etc/sudoers.d/ansible ; echo "AuthorizedKeysFile .ssh/authorized_keys" >> /etc/ssh/sshd_config; sed -i "s/ChallengeResponseAuthentication no/ChallengeResponseAuthentication yes/" /etc/ssh/sshd_config; echo "PubkeyAuthentication yes" >> /etc/ssh/sshd_config ; echo "PasswordAuthentication no" >> /etc/ssh/sshd_config ; echo "PermitEmptyPasswords no" >> /etc/ssh/sshd_config ; mkdir -p /home/ansible/.ssh ; echo "<ansible_ssh_key>" > /home/ansible/.ssh/authorized_keys ; chmod 700 -R /home/ansible/.ssh ; chown -R ansible: /home/ansible/.ssh'
+in-target sh -c 'echo "analyste ALL=(ALL:ALL) NOPASSWD:ALL" > /etc/sudoers.d/analyste ; chmod 0440 /etc/sudoers.d/analyste ; echo "AuthorizedKeysFile .ssh/authorized_keys" >> /etc/ssh/sshd_config; sed -i "s/ChallengeResponseAuthentication no/ChallengeResponseAuthentication yes/" /etc/ssh/sshd_config; echo "PubkeyAuthentication yes" >> /etc/ssh/sshd_config ; echo "PasswordAuthentication no" >> /etc/ssh/sshd_config ; echo "PermitEmptyPasswords no" >> /etc/ssh/sshd_config ; mkdir -p /home/analyste/.ssh ; echo "<analyste_ssh_key>" > /home/analyste/.ssh/authorized_keys ; chmod 700 -R /home/analyste/.ssh ; chown -R analyste: /home/analyste/.ssh'
