@@ -52,7 +52,13 @@
       "type": "shell",
       "inline": [
         "sudo apt update && sudo apt upgrade -y",
-        "sudo apt install -y open-vm-tools htop net-tools"
+        "sudo apt install -y open-vm-tools htop net-tools ifplugd resolvconf",
+        "echo 'auto eth0' | sudo tee -a /etc/network/interfaces",
+        "echo 'iface eth0 inet dhcp' | sudo tee -a /etc/network/interfaces",
+        "echo 'pre-up sleep 2' | sudo tee -a /etc/network/interfaces",
+        "sudo sed -i -e 's/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX=\"net.ifnames=0 biosdevname=0\"/g' /etc/default/grub",
+        "sudo grub-mkconfig -o /boot/grub/grub.cfg",
+        "sudo sed -i -e 's/INTERFACES=.*/INTERFACES=\"eth0\"/g' /etc/default/ifplugd"
         ]
     }
   ]
