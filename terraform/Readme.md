@@ -22,7 +22,7 @@ go get -u -v golang.org/x/crypto/ssh
 
 git clone https://github.com/dzflack/terraform-provider-esxi.git
 cd terraform-provider-esxi
-git checkout -b "feature/add-network-ressources"
+git checkout remotes/origin/feature/add-networking-resources
 CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -ldflags '-w -extldflags "-static"' -o terraform-provider-esxi_`cat version`
 ``` 
 
