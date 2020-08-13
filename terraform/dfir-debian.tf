@@ -43,12 +43,12 @@ resource "esxi_guest" "pin-dfir-debian" {
       "sudo apt install -y libpcre++-dev python-dev python-distorm3 python-openpyxl python-pil python-ujson",
       "sudo git clone https://github.com/volatilityfoundation/volatility.git /opt/volatility",
       "cd /opt/volatility; sudo python setup.py install",
-      "echo 'auto ens37' | sudo tee -a /etc/network/interfaces",
-      "echo 'iface ens37 inet static' | sudo tee -a /etc/network/interfaces",
+      "echo 'auto eth1' | sudo tee -a /etc/network/interfaces",
+      "echo 'iface eth1 inet static' | sudo tee -a /etc/network/interfaces",
       "echo '  address 10.1.1.12' | sudo tee -a /etc/network/interfaces",
       "echo '  netmask 255.255.255.0' | sudo tee -a /etc/network/interfaces",
-      "sudo ifup ens37",
-      "sudo reboot",
+      "sudo ifup eth1",
+      "sudo reboot"
     ]
   }
 }
