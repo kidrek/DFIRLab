@@ -25,8 +25,8 @@ resource "esxi_guest" "pin-dfir-debian" {
   connection {
     host        = self.ip_address
     type        = "ssh"
-    user        = "ansible"
-    private_key = file("../packer/FILES/ansible.key")
+    user        = "analyste"
+    private_key = file("../packer/FILES/analyste.key")
     timeout     = "180s"
   }
 
