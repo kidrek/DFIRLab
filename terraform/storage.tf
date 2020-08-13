@@ -1,6 +1,6 @@
 resource "esxi_virtual_disk" "vdisk2" {
   count                 = 1
-  virtual_disk_disk_store = "BIG"
+  virtual_disk_disk_store = "<esx_datastore>"
   virtual_disk_dir        = "PIN-${count.index + 1}-STORAGE"
   virtual_disk_size       = 15
   virtual_disk_type       = "thin"
@@ -26,7 +26,7 @@ resource "esxi_guest" "pin-storage" {
   ovf_source = "../packer/ova/template-Debian10.ova"
 
   network_interfaces {
-    virtual_network = "<esx_portgroup>"
+    virtual_network = "<portgroup--terraform-deployment>"
     nic_type        = "e1000"
   }
 
