@@ -2,7 +2,7 @@ resource "esxi_guest" "pin-elk" {
   count                 = 1
   guest_name            = "PIN-${count.index + 1}-ELK"
   notes                 = "Contact : me"
-  disk_store            = "datastore1"
+  disk_store            = "<esx_datastore>"
   boot_disk_type        = "thin"
   #boot_disk_size        = "100"
   memsize               = "2048"
@@ -10,10 +10,10 @@ resource "esxi_guest" "pin-elk" {
   power                 = "on"
   guest_startup_timeout = "180"
 
-  ovf_source = "../ovf-template/debian.ova"
+  ovf_source = "../packer/ova/template-Debian10.ova"
 
   network_interfaces {
-    virtual_network = "Terraform-deployment"
+    virtual_network = "<portgroup--terraform-deployment>"
     nic_type        = "e1000"
   }
 
@@ -26,8 +26,8 @@ resource "esxi_guest" "pin-elk" {
   connection {
     host        = self.ip_address
     type        = "ssh"
-    user        = "ansible"
-    private_key = file("./ansible-key")
+    user        = "analyste"
+    private_key = file("../packer/FILES/analyste.key")
     timeout     = "180s"
   }
 
@@ -46,11 +46,12 @@ resource "esxi_guest" "pin-elk" {
       "sudo /etc/init.d/docker start",
       "( sudo crontab -l; echo \"@reboot sleep 30 && cd /opt/docker-elk; sudo -u elk docker-compose up -d 1>/dev/null 2>&1\" ) | sudo crontab  -",
       "cd /opt/docker-elk; sudo -u elk docker-compose up -d",
-      "echo 'auto ens37' | sudo tee -a /etc/network/interfaces",
-      "echo 'iface ens37 inet static' | sudo tee -a /etc/network/interfaces",
+      "echo 'auto eth1' | sudo tee -a /etc/network/interfaces",
+      "echo 'iface eth1 inet static' | sudo tee -a /etc/network/interfaces",
       "echo '  address 10.1.1.11' | sudo tee -a /etc/network/interfaces",
       "echo '  netmask 255.255.255.0' | sudo tee -a /etc/network/interfaces",
-      "sudo ifup ens37",
+      "sudo ifup eth1",
+      "sudo reboot"
     ]
   }
 }
