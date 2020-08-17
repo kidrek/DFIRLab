@@ -1,32 +1,47 @@
+
+resource "esxi_virtual_disk" "vdisk2-sandbox" {
+  count                 = 1
+  virtual_disk_disk_store = "<esx_datastore>"
+  virtual_disk_dir        = "PIN-${count.index + 1}-Sandbox"
+  virtual_disk_size       = 40
+  virtual_disk_type       = "thin"
+}
+
+
 resource "esxi_guest" "pin-sandbox" {
   count                 = 1
   guest_name            = "PIN-${count.index + 1}-Sandbox"
   notes                 = "Contact : me"
-  disk_store            = "datastore1"
+  disk_store            = "<esx_datastore>"
   boot_disk_type        = "thin"
   #boot_disk_size        = "100"
-  memsize               = "2048"
+  memsize               = "4096"
   numvcpus              = "2"
   power                 = "on"
   guest_startup_timeout = "180"
 
-  ovf_source = "../ovf-template/debian.ova"
+  ovf_source = "../packer/ova/template-Debian10.ova"
+
+  virtual_disks {
+    virtual_disk_id = esxi_virtual_disk.vdisk2-sandbox[count.index].id
+    slot            = "0:2"
+  }
 
   network_interfaces {
-    virtual_network = "Terraform-deployment"
+    virtual_network = "<portgroup--terraform-deployment>"
     nic_type        = "e1000"
   }
 
   network_interfaces {
-    virtual_network = "pin-${count.index + 1}-vm"
+    virtual_network = "PIN-${count.index + 1}-vm"
     nic_type        = "e1000"
   }
 
   connection {
     host        = self.ip_address
     type        = "ssh"
-    user        = "ansible"
-    private_key = file("./ansible-key")
+    user        = "analyste"
+    private_key = file("../packer/FILES/analyste.key")
     timeout     = "180s"
   }
 
@@ -34,7 +49,7 @@ resource "esxi_guest" "pin-sandbox" {
   provisioner "remote-exec" {
     inline = [
       "echo 'Sandbox' | sudo tee /etc/hostname",
-      "sudo apt update; sudo apt install -y git-core",
+      "sudo apt update; sudo apt install -y git-core cifs-utils",
       "git clone https://github.com/kidrek/cuckoo.git",
       "sudo -u analyste -- sh -c 'cd /home/analyste/cuckoo; chmod +x cuckoo_install_kvm.sh; ./cuckoo_install_kvm.sh; ./cuckoo_install_kvm.sh'; sudo -u cuckoo -- sh -c 'sed -i \"s/cuckoo1/win10/\" /home/cuckoo/.cuckoo/conf/kvm.conf; sed -i \"s/192.168.56.101/192.168.122.110/\" /home/cuckoo/.cuckoo/conf/kvm.conf'",
       "echo -e \"o\nn\np\n1\n\n\nw\" | sudo fdisk /dev/sdb; sudo /usr/sbin/mkfs.ext4 /dev/sdb1",
@@ -45,6 +60,12 @@ resource "esxi_guest" "pin-sandbox" {
       "echo '  address 10.1.1.14' | sudo tee -a /etc/network/interfaces",
       "echo '  netmask 255.255.255.0' | sudo tee -a /etc/network/interfaces",
       "sudo ifup eth1",
+      "sudo mkdir /media/evidences;",
+      "sudo mount -t cifs -o username=root,password=,uid=1001,gid=1001 //10.1.1.15/evidences/ /media/evidences; sudo mkdir /media/evidences/cuckoo-analyses; sudo umount /media/evidences",
+      "echo '//10.1.1.15/evidences/cuckoo-analyses /media/evidences cifs username=root,password=,uid=1001,gid=1001,iocharset=utf8,mfsymlinks 0 0' | sudo tee -a /etc/fstab; sudo mount -a",
+      "sudo rm -rf /home/cuckoo/.cuckoo/storage",
+      "sudo ln -s /media/evidences/ /home/cuckoo/.cuckoo/storage",
+      "sudo mkdir /home/cuckoo/.cuckoo/storage/analyses /home/cuckoo/.cuckoo/storage/binaries/ /home/cuckoo/.cuckoo/storage/baseline"
     ]
   }
 
@@ -54,6 +75,6 @@ resource "esxi_guest" "pin-sandbox" {
   }
 
   provisioner "local-exec" {
-    command = "scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ../packer/FILES/analyste.key ../ova/PACKER-cuckooVM/win10.qcow2 analyste@${self.ip_address}:/var/lib/libvirt/images/;  ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ../packer/FILES/analyste.key -t analyste@${self.ip_address} 'chmod +x $HOME/cuckoo-win10.sh; $HOME/cuckoo-win10.sh;'"
+    command = "scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ../packer/FILES/analyste.key ../packer/ova/PACKER-cuckooVM/win10/Win10.qcow2 analyste@${self.ip_address}:/var/lib/libvirt/images/;  ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ../packer/FILES/analyste.key -t analyste@${self.ip_address} 'chmod +x $HOME/cuckoo-win10.sh; $HOME/cuckoo-win10.sh;'"
   }
 }
