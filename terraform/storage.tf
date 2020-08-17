@@ -1,4 +1,4 @@
-resource "esxi_virtual_disk" "vdisk2" {
+resource "esxi_virtual_disk" "vdisk2-storage" {
   count                 = 1
   virtual_disk_disk_store = "<esx_datastore>"
   virtual_disk_dir        = "PIN-${count.index + 1}-STORAGE"
@@ -19,7 +19,7 @@ resource "esxi_guest" "pin-storage" {
   guest_startup_timeout = "180"
 
   virtual_disks {
-    virtual_disk_id = esxi_virtual_disk.vdisk2[count.index].id
+    virtual_disk_id = esxi_virtual_disk.vdisk2-storage[count.index].id
     slot            = "0:2"
   }
 
@@ -59,6 +59,7 @@ resource "esxi_guest" "pin-storage" {
       "echo '   read only = no' | sudo tee -a /etc/samba/smb.conf",
       "echo '   path = /media/evidences' | sudo tee -a /etc/samba/smb.conf",
       "echo '   guest ok = yes' | sudo tee -a /etc/samba/smb.conf",
+      "sudo /etc/init.d/samba-ad-dc restart",
       "echo 'auto eth1' | sudo tee -a /etc/network/interfaces",
       "echo 'iface eth1 inet static' | sudo tee -a /etc/network/interfaces",
       "echo '  address 10.1.1.15' | sudo tee -a /etc/network/interfaces",
