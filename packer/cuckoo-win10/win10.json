@@ -10,7 +10,7 @@
       "disk_size": "20480",
       "accelerator": "kvm",
       "cpus":"2",
-      "memory":"2048",
+      "memory":"1024",
       "qemuargs": [
         [
           "-drive",
@@ -22,7 +22,7 @@
         ],
         [
           "-m",
-          "4096"
+          "1024"
         ],
         [
           "-usbdevice",
@@ -52,7 +52,8 @@
         "../SCRIPTS/fixnetwork.ps1",
         "../SCRIPTS/disable-winrm.ps1",
         "../SCRIPTS/enable-winrm.ps1",
-        "../SCRIPTS/chocolatey.ps1"
+        "../SCRIPTS/chocolatey.ps1",
+        "../SCRIPTS/disable-windowsDefender.bat"
       ],
       "headless": false
     }
@@ -62,7 +63,6 @@
       "type": "powershell",
       "inline": [
         "Set-NetFirewallProfile -Profile Domain,Public,Private -Enabled False",
-        "Set-MpPreference -DisableRealtimeMonitoring $true",
         "choco install -y 7zip putty filezilla firefoxesr vlc vscode",
         "choco install -y git python2 python3 golang",
         "choco install -y adobereader"
