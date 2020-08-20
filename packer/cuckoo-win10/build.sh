@@ -2,11 +2,17 @@
 
 
 ## Remove old files
-rm -rf /media/analyste/4b1e2b12-0d2d-48c5-812c-761c943b7f09/PACKER-cuckooVM/win10
-## Generate machine
-export PACKER_LOG=1; packer build win10.json
+rm -rf ../ova/PACKER-cuckooVM/win10
+## Build machine
+export PACKER_LOG=1; packer build win10.json | tee build.log
 
-
+if [ $? -ne 0 ]; then
+  echo "Packer [template-cuckoo_win10] : Failure" | ../../slack-msg.sh
+  tail -n20 build.log | ../../slack-msg.sh
+else
+  echo "Packer [template-cuckoo_win10] : Success" | ../../slack-msg.sh
+  #rm -f build.log
+fi
 
 
 ## Flush memory cache
