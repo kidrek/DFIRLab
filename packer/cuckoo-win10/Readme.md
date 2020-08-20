@@ -6,6 +6,10 @@ Celles-ci permettront d'identifier des charges malveillantes.
 Pour obtenir un maximum d'information, l'outil sysmon a été integré à la machine virtuelle. 
 Les événements produits par Sysmon seront transférés par Winlogbeat à l'instance ElasticSearch du lab pour une analyse ultérieure.
 
+L'authentification s'effectue automatiquement avec les informations de l'utilisateur analyste.
+* nom d'utilisateur : analyste
+* mot de passe : analyste
+
 ## Génération via PACKER
 
 ## Test de bon fonctionnement
