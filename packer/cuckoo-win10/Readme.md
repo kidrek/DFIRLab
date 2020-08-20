@@ -1,6 +1,10 @@
 # Template de machine Microsoft Windows 10 (QEMU/KVM)
 
-Cette machine virtuelle va être utilisé dans le cadre d'analyse dynamique d'exécutable, afin d'identifier des charges malveillantes.
+Cette machine virtuelle va être utilisée dans le cadre d'analyse dynamique d'exécutable.
+Celles-ci permettront d'identifier des charges malveillantes.
+
+Pour obtenir un maximum d'information, l'outil sysmon a été integré à la machine virtuelle. 
+Les événements produits par Sysmon seront transférés par Winlogbeat à l'instance ElasticSearch du lab pour une analyse ultérieure.
 
 ## Génération via PACKER
 
