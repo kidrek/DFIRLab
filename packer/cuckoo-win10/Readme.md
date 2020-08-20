@@ -7,6 +7,7 @@ Pour obtenir un maximum d'information, l'outil sysmon a été integré à la mac
 Les événements produits par Sysmon seront transférés par Winlogbeat à l'instance ElasticSearch du lab pour une analyse ultérieure.
 
 L'authentification s'effectue automatiquement avec les informations de l'utilisateur analyste.
+Cet utilisateur fait partie du groupe administrateur pour permette une exécution optimale des exécutables qui seront soumis à la Sandbox.
 * nom d'utilisateur : analyste
 * mot de passe : analyste
 
