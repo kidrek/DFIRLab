@@ -65,7 +65,19 @@ resource "esxi_guest" "pin-sandbox" {
       "echo '//10.1.1.15/evidences/cuckoo-analyses /media/evidences cifs username=root,password=,uid=1001,gid=1001,iocharset=utf8,mfsymlinks 0 0' | sudo tee -a /etc/fstab; sudo mount -a",
       "sudo rm -rf /home/cuckoo/.cuckoo/storage",
       "sudo ln -s /media/evidences/ /home/cuckoo/.cuckoo/storage",
-      "sudo mkdir /home/cuckoo/.cuckoo/storage/analyses /home/cuckoo/.cuckoo/storage/binaries/ /home/cuckoo/.cuckoo/storage/baseline"
+      "sudo mkdir /home/cuckoo/.cuckoo/storage/analyses /home/cuckoo/.cuckoo/storage/binaries/ /home/cuckoo/.cuckoo/storage/baseline",
+      "sudo apt install -y ufw",
+      "sudo sed -i '10iCOMMIT' /etc/ufw/before.rules",
+      "sudo sed -i '10i-A PREROUTING -i virbr0 -d 192.168.122.1 -p tcp --dport 9200 -j DNAT --to-destination 10.1.1.11:9200' /etc/ufw/before.rules",
+      "sudo sed -i '10i:PREROUTING ACCEPT [0:0]' /etc/ufw/before.rules",
+      "sudo sed -i '10i*nat' /etc/ufw/before.rules",
+      "sudo ufw allow in on eth0 to any port 22 proto tcp # SSH",
+      "sudo ufw allow in on eth1 to any port 22 proto tcp # SSH",
+      "sudo ufw allow in on eth0 to any port 8000 proto tcp # CUCKOO Web",
+      "sudo ufw allow in on eth1 to any port 8000 proto tcp # CUCKOO Web",
+      "sudo ufw allow in on virbr0 to any port 2042 proto tcp # Cuckoo result server",
+      "sudo ufw allow in on virbr0 to any port 53 proto udp # DNS",
+      "yes y | sudo ufw enable",
     ]
   }
 
