@@ -7,18 +7,17 @@ sudo virt-install --import --name win10 --memory 2048 --vcpus 2 --cpu host --acc
 
 ## Attribution d'une addresse ipv4 statique
 sleep 180
-### Suppression du range DHCP existant
 sudo virsh net-update default delete ip-dhcp-range "`sudo virsh net-dumpxml default | grep 'range' | sed 's/      //'`" --live --config
 sudo virsh destroy win10
 sudo virsh net-update default add-last ip-dhcp-host "<host mac='`sudo virsh dumpxml win10 | grep -i 'mac address' | awk -F "'" '{print $2}'`' name='win10' ip='192.168.122.110'/>" --live --config
 
 ## Création du snapshot nécessaire à cuckoo
 sudo virsh start win10
-sleep 300
+sleep 900
 sudo virsh snapshot-create-as --domain win10 --name CUCKOO_READY
 sudo virsh destroy win10
 
-## Création du template d'index cukoo au sein de l'instance ELK
+## Création du template d'index cukoo dans ELK
 curl -H 'Content-Type: application/json' -XPUT http://10.1.1.11:9200/_template/cuckoo_template -d '{"index_patterns":["cuckoo"],"template":{"mappings":{"_doc":{"_meta":{},"_source":{},"properties":{}}}}}'
 
 
