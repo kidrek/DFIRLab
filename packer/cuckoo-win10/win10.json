@@ -53,9 +53,7 @@
         "../SCRIPTS/disable-windowsDefender.bat",
         "../SCRIPTS/disable-winrm.ps1",
         "../SCRIPTS/enable-winrm.ps1",
-        "../SCRIPTS/fixnetwork.ps1",
-        "../SCRIPTS/Set-SysmonSettings.ps1",
-        "../SCRIPTS/Set-WindowsTelemetrySettings.ps1"
+        "../SCRIPTS/fixnetwork.ps1"
       ],
       "headless": false
     }
