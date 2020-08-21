@@ -2,6 +2,7 @@
 
 
 Ce projet a pour but d'offrir à toutes équipes de réponse à incident une plateforme prête à mener une investigation.
+
 Elle est constituée :
 * d'un serveur de fichier SAMBA
 * d'un serveur d'analyse, contenant une instance ELK
