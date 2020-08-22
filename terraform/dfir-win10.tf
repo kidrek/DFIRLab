@@ -30,6 +30,11 @@ resource "esxi_guest" "pin-dfir-win10" {
     timeout     = "180s"
   }
 
+  ## Send powershell script
+  provisioner "file" {
+    source = "../packer/SCRIPTS/install-zimmermantools.ps1"
+    destination = "c:/windows/temp/install-zimmermantools.ps1"
+  }
   ## Command executed on remote VM through SSH connection
   provisioner "remote-exec" {
     inline = [
@@ -45,10 +50,11 @@ resource "esxi_guest" "pin-dfir-win10" {
       "powershell.exe \" choco install -y --force winscp\"",
       "powershell.exe \"Set-WindowsExplorerOptions -EnableShowFileExtensions -EnableShowFullPathInTitleBar -EnableExpandToOpenFolder -EnableShowRibbon\"",
       "powershell.exe \"Import-Module 'C:\\ProgramData\\Chocolatey\\helpers\\chocolateyInstaller.psm1' -Force; Install-ChocolateyShortcut -shortcutFilePath 'C:\\Users\\Public\\Desktop\\Evidences.lnk' -targetPath Z:; Install-ChocolateyShortcut -shortcutFilePath 'C:\\Users\\Public\\Desktop\\Tools.lnk' -targetPath C:\\ProgramData\\chocolatey\\bin; Install-ChocolateyShortcut -shortcutFilePath 'C:\\Users\\%USERNAME%\\Desktop\\putty.lnk' -targetPath C:\\ProgramData\\chocolatey\\bin\\putty.exe\"",
-      "powershell.exe \" choco install -y firefoxesr googlechrome greenshot filezilla 7zip vscode notepadplusplus keepass vlc\"",
+      "powershell.exe \" choco install -y firefoxesr googlechrome greenshot filezilla 7zip vscodium notepadplusplus keepass vlc\"",
       "powershell.exe \" choco install -y wireshark\"",
       "powershell.exe \" choco install -y volatility autopsy sleuthkit eraser network-miner\"",
       "powershell.exe \" choco install -y sysinternals --force --params '/InstallDir:C:\\ProgramData\\chocolatey\\bin\\sysinternals'\"",
+      "powershell.exe -ep bypass -File c:/windows/temp/install-zimmermantools.ps1",
       "powershell.exe \"shutdown.exe /r /t 0\"",
       "powershell.exe \"shutdown.exe /r /t 0\"",
     ]
