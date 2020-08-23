@@ -48,6 +48,7 @@ resource "esxi_guest" "pin-dfir-debian" {
       "echo '  address 10.1.1.12' | sudo tee -a /etc/network/interfaces",
       "echo '  netmask 255.255.255.0' | sudo tee -a /etc/network/interfaces",
       "sudo ifup eth1",
+      "echo \"up route add -net 10.8.0.0/24 gw 10.1.1.254 dev eth1\" | sudo tee -a /etc/network/interfaces",
       "sudo reboot"
     ]
   }
