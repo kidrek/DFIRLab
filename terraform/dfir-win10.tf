@@ -39,6 +39,7 @@ resource "esxi_guest" "pin-dfir-win10" {
   provisioner "remote-exec" {
     inline = [
       "powershell.exe \"Set-WinUserLanguageList -LanguageList fr-FR -Force\"",
+      "powershell.exe \"Set-ItemProperty -Path 'HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Themes\\Personalize' -Name 'SystemUsesLightTheme' -Type DWord -Value 1\"",
       "powershell.exe \"netsh interface ip set address 'Ethernet0' static 10.1.1.13 255.255.255.0 10.1.1.254\"",
       "powershell.exe \"sleep 3; ping -n 3 10.1.1.15\"",
       "powershell.exe \"net use Z: \\\\10.1.1.15\\evidences /persistent:yes\"",
