@@ -60,6 +60,7 @@ resource "esxi_guest" "pin-sandbox" {
       "echo '  address 10.1.1.14' | sudo tee -a /etc/network/interfaces",
       "echo '  netmask 255.255.255.0' | sudo tee -a /etc/network/interfaces",
       "sudo ifup eth1",
+      "echo \"up route add -net 10.8.0.0/24 gw 10.1.1.254 dev eth1\" | sudo tee -a /etc/network/interfaces",
       "sudo mkdir /media/evidences;",
       "sudo mount -t cifs -o username=root,password=,uid=1001,gid=1001 //10.1.1.15/evidences/ /media/evidences; sudo mkdir /media/evidences/cuckoo-analyses; sudo umount /media/evidences",
       "echo '//10.1.1.15/evidences/cuckoo-analyses /media/evidences cifs username=root,password=,uid=1001,gid=1001,iocharset=utf8,mfsymlinks 0 0' | sudo tee -a /etc/fstab; sudo mount -a",
