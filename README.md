@@ -14,6 +14,8 @@ Une fois le transfert effectué, elles seront accessibles des autres serveurs.
 
 !! Ce projet est toujours en cours d'élaboration !! 
 
+![./DFIRLab.png]
+
 ## Mise en oeuvre
 
 Il est impératif de dédier un serveur virtuel pour faciliter la génération des templates et de leur déploiement.
