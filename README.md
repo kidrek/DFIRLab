@@ -1,9 +1,9 @@
-# DFIRLab
+![](./DFIRLab.png)
 
 
-Ce projet a pour but d'offrir une plateforme d'investigation facilement déployable.
+DFIRLab est une plateforme d'investigation numérique facilement déployable.
 
-Elle est constituée :
+Elle est actuellement constituée :
 * d'un serveur de fichier SAMBA
 * d'un serveur d'analyse, contenant une instance ELK
 * d'un serveur d'analyse en sandbox Cuckoo/Capev2
@@ -13,8 +13,6 @@ Les preuves sont à transférer vers le serveur de stockage (Samba).
 Une fois le transfert effectué, elles seront accessibles des autres serveurs.
 
 !! Ce projet est toujours en cours d'élaboration !! 
-
-![](./DFIRLab.png)
 
 ## Mise en oeuvre
 
