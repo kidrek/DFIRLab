@@ -17,6 +17,8 @@ Une fois le transfert effectué, elles seront accessibles des autres serveurs.
 ## Mise en oeuvre
 
 Il est impératif de dédier un serveur virtuel pour faciliter la génération des templates et de leur déploiement.
+Les templates de machine virtuelle sont générés grâce à l'outil Packer.
+Le déploiement de la plateforme est quant à lui assuré par l'outil Terraform.
 
 ### Packer
 
