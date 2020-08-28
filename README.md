@@ -16,7 +16,15 @@ Une fois le transfert effectué, elles seront accessibles des autres serveurs.
 
 ## Mise en oeuvre
 
-Pour faciliter la génération des templates et de leur déploiement, il est impératif d'appliquer quelques ajustements sur le système hôte.
+Il est impératif de dédier un serveur virtuel pour faciliter la génération des templates et de leur déploiement.
+
+### Packer
+
+
+### Terraform
+
+### Tips
+
 Packer et Terraform utilise une connexion SSH sur les machines virtuelles nouvelles créées pour y installer des paquets ou y appliquer certaines configurations. Afin d'éviter l'attente d'une validation 'Fingerprint' durant le déploiement, j'ai du appliquer la configuration suivante :
 
 ```
