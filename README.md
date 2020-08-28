@@ -1,7 +1,7 @@
 # DFIRLab
 
 
-Ce projet a pour but d'offrir à toutes équipes de réponse à incident une plateforme prête à mener une investigation.
+Ce projet a pour but d'offrir une plateforme d'investigation facilement déployable.
 
 Elle est constituée :
 * d'un serveur de fichier SAMBA
@@ -9,8 +9,8 @@ Elle est constituée :
 * d'un serveur d'analyse en sandbox Cuckoo
 * de deux machines contenant des outils d'analyse Forensic, en environnement Debian et Microsoft Windows.
 
-Les preuves sont transférées vers le serveur de stockage (Samba). 
-Elles seront ensuite accessibles des autres serveurs.
+Les preuves sont à transférer vers le serveur de stockage (Samba). 
+Une fois le transfert effectué, elles seront accessibles des autres serveurs.
 
 !! Ce projet est toujours en cours d'élaboration !! 
 
