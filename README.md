@@ -6,7 +6,7 @@ Ce projet a pour but d'offrir une plateforme d'investigation facilement déploya
 Elle est constituée :
 * d'un serveur de fichier SAMBA
 * d'un serveur d'analyse, contenant une instance ELK
-* d'un serveur d'analyse en sandbox Cuckoo
+* d'un serveur d'analyse en sandbox Cuckoo/Capev2
 * de deux machines contenant des outils d'analyse Forensic, en environnement Debian et Microsoft Windows.
 
 Les preuves sont à transférer vers le serveur de stockage (Samba). 
