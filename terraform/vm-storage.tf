@@ -46,6 +46,8 @@ resource "esxi_guest" "dfirlab-storage" {
       "echo '/dev/sdb1    /media/evidences  ext4 defaults 0 0'  | sudo tee -a /etc/fstab; sudo mount -a",
       "sudo chmod -R 777 /media/evidences",
       "sudo apt update;  export DEBIAN_FRONTEND=noninteractive; sudo -E bash -c 'apt install -y samba samba-client'",
+      "sudo sed -i '25isocket options = TCP_NODELAY SO_RCVBUF=524288 SO_SNDBUF=524288 IPTOS_LOWDELAY' /etc/samba/smb.conf",
+      "sudo sed -i '25i## Increase speed' /etc/samba/smb.conf",
       "echo '[evidences]' | sudo tee -a /etc/samba/smb.conf",
       "echo '   comment = upload your evidences on this share' | sudo tee -a /etc/samba/smb.conf",
       "echo '   read only = no' | sudo tee -a /etc/samba/smb.conf",
