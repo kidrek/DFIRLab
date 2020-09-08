@@ -27,7 +27,7 @@ CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -ldflags '-w -extldflags "-sta
 ``` 
 
 Une fois placé dans le répertoire contenant la configuration au format ".tf".
-Créer l'arborescence ci-dessous afin d'y placer le provider nouvellement généré.
+Il est nécessaire de créer l'arborescence ci-dessous afin d'y déplacer le provider nouvellement généré.
 
 ```
 mkdir -p terraform.d/plugins/linux_amd64
