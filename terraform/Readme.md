@@ -26,8 +26,7 @@ git checkout remotes/origin/feature/add-networking-resources
 CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -ldflags '-w -extldflags "-static"' -o terraform-provider-esxi_`cat version`
 ``` 
 
-Une fois placé dans le répertoire contenant la configuration au format ".tf".
-Il est nécessaire de créer l'arborescence ci-dessous afin d'y déplacer le provider nouvellement généré.
+Une fois le provider compilé celui-ci devra être placé dans une arborescence spécifique au sein du répertoire stockant les fichiers de configuration au format ".tf".
 
 ```
 mkdir -p terraform.d/plugins/linux_amd64
