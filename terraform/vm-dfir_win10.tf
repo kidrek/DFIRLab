@@ -4,7 +4,7 @@ resource "esxi_guest" "dfirlab-win10" {
   notes                 = "Contact : me"
   disk_store            = var.datastore
   boot_disk_type        = "thin"
-  memsize               = "2048"
+  memsize               = "4096"
   numvcpus              = "2"
   power                 = "on"
   guest_startup_timeout = "180"
