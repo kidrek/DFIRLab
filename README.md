@@ -14,7 +14,19 @@ Une fois le transfert effectué, elles seront accessibles des autres serveurs.
 
 !! Ce projet est toujours en cours d'élaboration !! 
 
-## Mise en oeuvre
+# Table d'index
+
+- [1. Mise en oeuvre](#1-mise-en-oeuvre)
+  * [1.1. Installation de Packer](#11-installation-de-packer)
+  * [1.2. Installation de Terraform](#12-installation-de-terraform)
+- [2. Usage](#2-usage)
+  * [2.1. Génération des templates via Packer](#21-génération-des-templates-via-packer)
+  * [2.2. Déploiement de la plateforme via Terraform](#22-déploiement-de-la-plateforme-via-terraform)
+  * [2.3 Tips](#23-tips)
+
+  
+
+## 1. Mise en oeuvre
 
 Les templates de machine virtuelle sont générés grâce à l'outil Packer.
 Le déploiement de la plateforme est quant à lui assuré par l'outil Terraform.
@@ -28,7 +40,7 @@ Pré-requis logiciels :
 Pré-requis :
 * Portgroup dédié pour que le serveur Terraform puisse communiquer avec les templates nouvellement déployé.
 
-### 1. Installation de Packer
+### 1.1. Installation de Packer
 
 Packer est une solution développée par HashiCorp disponible gratuitement.
 Son rôle est de faciliter la génération de machines virtuelles à travers des fichiers de configuration "virtualmachineAScode".
@@ -42,7 +54,7 @@ Le binaire est téléchargeable ici : https://www.packer.io/downloads
 
 Une fois téléchargé, le binaire devra être placé dans un répertoire du ```PATH``` pour pouvoir l'exécuter.
 
-#### Tips
+* Tips
 
 Packer utilise le protocole VNC pour l'installation des systèmes d'exploitation.
 J'utilise dans mon cas un ESXi free, j'ai du ajouter via une connexion SSH sur l'hyperviseur une règle sur le parefeu pour authoriser le traffic VNC. 
@@ -102,7 +114,7 @@ exit 0" >> /etc/rc.local.d/local.sh
 ```
 
 
-### 2. Installation de Terraform 
+### 1.2. Installation de Terraform 
 
 source : https://www.terraform.io/
 
@@ -142,9 +154,9 @@ terraform init
 ```
 
 
-## Usage
+## 2. Usage
 
-### 1. Génération des templates via Packer (/packer)
+### 2.1. Génération des templates via Packer
 
 L'outil Packer va permettre de générer les templates de machines virtuelles qui seront déployés par la suite par Terraform.
 Avant que le processus ne soit automatisé, il est nécessaire de se placer dans le répertoire "/packer" puis dans chacun des répertoires nommés "template-XXXX" et d'y exécuter le script ```build.sh```. 
@@ -158,7 +170,7 @@ cd ./packer/template-debian10/
 ```
 
 
-### 2. Déploiement de l'architecture via Terraform (/terraform)
+### 2.2. Déploiement de la plateforme via Terraform
 
 Le déploiement de l'architecture se déroule aussi facilement que la génération des templates. Il suffit de se placer dans le répertoire "/terraform", et d'y exécuter le script ```build.sh```.
 Il est nécessaire d'éditer au préalable les fichiers ```00_main.tf``` et ```00_variables.tf``` pour y spécifier les informations indispensables au déploiement de l'architecture.
@@ -168,7 +180,7 @@ cd ./terraform/
 ./build.sh
 ```
 
-### Tips
+### 2.3 Tips
 
 Packer et Terraform utilise une connexion SSH sur les machines virtuelles nouvelles créées pour y installer des paquets ou y appliquer certaines configurations. Afin d'éviter l'attente d'une validation 'Fingerprint' durant le déploiement, j'ai du appliquer la configuration suivante :
 
