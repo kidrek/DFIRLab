@@ -120,7 +120,7 @@ source : https://www.terraform.io/
 
 Le téléchargement du binaire s'effectue ici : https://www.terraform.io/downloads.html 
 J'ai rencontré des problèmes avec la version 0.13. Je conseille pour l'instant d'utiliser la dernière release 0.12 en attendant de corriger les problèmes de compatibilités.
-Une fois décompressé le binaire devra être déplacé dans un des répertoires du PATH pour pouvoir l'exécuter.
+Une fois décompressé le binaire devra être déplacé dans un des répertoires du PATH.
 
 
 ``` 
