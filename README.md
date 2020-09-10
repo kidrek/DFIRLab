@@ -152,7 +152,7 @@ Avant que le processus ne soit automatisé, il est nécessaire de se placer dans
 Ainsi en guise d'exemple, pour générer l'image de référence Debian :
 
 ```
-cd packer/template-debian10/
+cd ./packer/template-debian10/
 ./build.sh
 ```
 
@@ -163,7 +163,7 @@ Le déploiement de l'architecture se déroule aussi facilement que la générati
 Il est nécessaire d'éditer au préalable les fichiers ```00_main.tf``` et ```00_variables.tf``` pour y spécifier les informations indispensables au déploiement de l'architecture.
 
 ```
-cd terraform/
+cd ./terraform/
 ./build.sh
 ```
 
