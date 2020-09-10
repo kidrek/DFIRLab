@@ -147,7 +147,8 @@ terraform init
 ### 1. Génération des templates via Packer (/packer)
 
 L'outil Packer va permettre de générer les templates de machines virtuelles qui seront déployés par la suite par Terraform.
-Avant que le processus ne soit automatisé, il est nécessaire de se placer dans le répertoire "/packer" puis dans chacun des répertoires nommés "template-XXXX" et d'y exécuter le script ```build.sh```.
+Avant que le processus ne soit automatisé, il est nécessaire de se placer dans le répertoire "/packer" puis dans chacun des répertoires nommés "template-XXXX" et d'y exécuter le script ```build.sh```. 
+Chaque template a son fichier ```Readme.md``` apportant les informations nécessaires à son utilisation.
 
 Ainsi en guise d'exemple, pour générer l'image de référence Debian :
 
