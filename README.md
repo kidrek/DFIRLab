@@ -20,10 +20,28 @@ Il est impératif de dédier un serveur virtuel pour faciliter la génération d
 Les templates de machine virtuelle sont générés grâce à l'outil Packer.
 Le déploiement de la plateforme est quant à lui assuré par l'outil Terraform.
 
-### Packer
+### 1. Génération des templates via Packer (/packer)
+
+L'outil Packer va permettre de générer les templates de machines virtuelles qui seront déployés par la suite par Terraform.
+Avant que le processus ne soit automatisé, il est nécessaire de se placer dans le répertoire "/packer" puis dans chacun des répertoires nommés "template-XXXX" et d'y exécuter le script ```build.sh```.
+
+Ainsi en guise d'exemple, pour générer l'image de référence Debian :
+
+```
+cd packer/template-debian10/
+./build.sh
+```
 
 
-### Terraform
+### 2. Déploiement de l'architecture via Terraform (/terraform)
+
+Le déploiement de l'architecture se déroule aussi facilement que la génération des templates. Il suffit de se placer dans le répertoire "/terraform", et d'y exécuter le script ```build.sh```.
+Il est impératif d'éditer au préalable les fichiers ```00_main.tf``` et ```00_variables.tf``` pour y spécifier les informations indispensables au déploiement de l'architecture.
+
+```
+cd terraform/
+./build.sh
+```
 
 ### Tips
 
