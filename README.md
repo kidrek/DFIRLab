@@ -182,7 +182,7 @@ cd ./terraform/
 
 ### 2.3 Tips
 
-Packer et Terraform utilise une connexion SSH sur les machines virtuelles nouvelles créées pour y installer des paquets ou y appliquer certaines configurations. Afin d'éviter l'attente d'une validation 'Fingerprint' durant le déploiement, j'ai du appliquer la configuration suivante :
+Packer et Terraform utilisent une connexion SSH sur les machines virtuelles nouvellement créées pour y installer des paquets ou y appliquer certaines configurations. Afin d'éviter l'attente d'une validation 'Fingerprint' durant le déploiement, j'ai du appliquer la configuration suivante :
 
 ```
 # vi $HOME/.ssh/config 
