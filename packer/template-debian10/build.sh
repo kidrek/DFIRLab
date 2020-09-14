@@ -10,7 +10,8 @@ rm -rf $DIRECTORY/$NAME
 rm -f build.log
 
 ## Generate new analyste SSH keys
-yes yes | ssh-keygen -q -t rsa -N "" -f ../FILES/analyste.key -b 4096 -C "analyste@pin.local"
+rm -f ../FILES/analyste.key ../FILES/analyste.key.pub
+yes yes | ssh-keygen -q -t rsa -N "" -f ../FILES/analyste.key -b 4096 -C "analyste@dfirlab.local"
 
 
 ## Generate preseed with strong password
