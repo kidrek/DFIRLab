@@ -5,7 +5,7 @@ resource "esxi_guest" "dfirlab-debian" {
   disk_store            = var.datastore
   boot_disk_type        = "thin"
   memsize               = "4096"
-  numvcpus              = "2"
+  numvcpus              = "4"
   power                 = "on"
   guest_startup_timeout = "180"
   ovf_source            = "../packer/ova/template-Debian10.ova"
@@ -31,6 +31,11 @@ resource "esxi_guest" "dfirlab-debian" {
   }
 
   ## Command executed on remote VM through SSH connection
+  provisioner "file" {
+    source = "./SCRIPTS/volatility_autoanalyse.sh"
+    destination = "/$HOME/volatility_autoanalyse.sh"
+  }
+
   provisioner "remote-exec" {
     inline = [
       "echo 'dfirlab-debian' | sudo tee /etc/hostname",
@@ -41,13 +46,16 @@ resource "esxi_guest" "dfirlab-debian" {
       "echo '  address 10.1.1.12' | sudo tee -a /etc/network/interfaces",
       "echo '  netmask 255.255.255.0' | sudo tee -a /etc/network/interfaces",
       "sudo ifup eth1",
-      "sudo mkdir /media/evidences; echo '//10.1.1.15/evidences /media/evidences cifs guest,rw,iocharset=utf8 0 0' | sudo tee -a /etc/fstab; sudo mount -a; sudo chmod -R 777 /media/evidences",
-      "sudo mkdir -p /media/evidences/mount/encase",
+      "sudo mkdir /media/evidences/; echo '//10.1.1.15/evidences /media/evidences cifs guest,rw,iocharset=utf8 0 0' | sudo tee -a /etc/fstab; sudo mount -a; sudo chmod -R 777 /media/evidences",
+      "sudo mkdir -p /media/encase",
+      "sudo mkdir -p /media/evidences/MEMORY; sudo mkdir /media/evidences/HDD",
+      "sudo mv /$HOME/volatility_autoanalyse.sh /media/evidences/MEMORY/; chmod +x /media/evidences/MEMORY/volatility_autoanalyse.sh",
       "sudo git clone https://github.com/log2timeline/plaso.git /opt/log2timeline",
       "cd /opt/log2timeline/; sudo pip3 install -r requirements.txt",
       "cd /opt/log2timeline/; sudo python3 setup.py install",
       "sudo apt install -y libpcre++-dev python-dev python-distorm3 python-openpyxl python-pil python-ujson",
       "sudo git clone https://github.com/volatilityfoundation/volatility.git /opt/volatility",
+      "cd /opt/volatility; sudo wget https://patch-diff.githubusercontent.com/raw/volatilityfoundation/volatility/pull/563.patch; sudo patch -fs -p1  < ./563.patch",
       "cd /opt/volatility; sudo python setup.py install",
       "sudo mkdir /media/evidences/documentation",
       "cd /media/evidences/documentation; sudo wget https://raw.githubusercontent.com/teamdfir/sift-saltstack/master/sift/files/sift/resources/Evidence-of-Poster.pdf",
