@@ -32,8 +32,8 @@ resource "esxi_guest" "dfirlab-debian" {
 
   ## Command executed on remote VM through SSH connection
   provisioner "file" {
-    source = "./SCRIPTS/volatility_autoanalyse.sh"
-    destination = "/$HOME/volatility_autoanalyse.sh"
+    source = "./SCRIPTS/memory_autoanalyse.sh"
+    destination = "/$HOME/memory_autoanalyse.sh"
   }
 
   provisioner "remote-exec" {
@@ -49,7 +49,7 @@ resource "esxi_guest" "dfirlab-debian" {
       "sudo mkdir /media/evidences/; echo '//10.1.1.15/evidences /media/evidences cifs guest,rw,iocharset=utf8 0 0' | sudo tee -a /etc/fstab; sudo mount -a; sudo chmod -R 777 /media/evidences",
       "sudo mkdir -p /media/encase",
       "sudo mkdir -p /media/evidences/MEMORY; sudo mkdir /media/evidences/HDD",
-      "sudo mv /$HOME/volatility_autoanalyse.sh /media/evidences/MEMORY/; chmod +x /media/evidences/MEMORY/volatility_autoanalyse.sh",
+      "sudo mv /$HOME/memory_autoanalyse.sh /media/evidences/MEMORY/; chmod +x /media/evidences/MEMORY/memory_autoanalyse.sh",
       "sudo git clone https://github.com/log2timeline/plaso.git /opt/log2timeline",
       "cd /opt/log2timeline/; sudo pip3 install -r requirements.txt",
       "cd /opt/log2timeline/; sudo python3 setup.py install",
@@ -57,6 +57,7 @@ resource "esxi_guest" "dfirlab-debian" {
       "sudo git clone https://github.com/volatilityfoundation/volatility.git /opt/volatility",
       "cd /opt/volatility; sudo wget https://patch-diff.githubusercontent.com/raw/volatilityfoundation/volatility/pull/563.patch; sudo patch -fs -p1  < ./563.patch",
       "cd /opt/volatility; sudo python setup.py install",
+      "sudo git clone https://github.com/Neo23x0/Loki.git /opt/Loki; cd /opt/Loki; sudo apt install -y python-pip; sudo pip2 install -r requirements.txt; sudo python2 loki.py --update;",
       "sudo mkdir /media/evidences/documentation",
       "cd /media/evidences/documentation; sudo wget https://raw.githubusercontent.com/teamdfir/sift-saltstack/master/sift/files/sift/resources/Evidence-of-Poster.pdf",
       "cd /media/evidences/documentation; sudo wget https://raw.githubusercontent.com/teamdfir/sift-saltstack/master/sift/files/sift/resources/Find-Evil-Poster.pdf",
@@ -70,4 +71,5 @@ resource "esxi_guest" "dfirlab-debian" {
       "sudo shutdown -r +1"
     ]
   }
+
 }
