@@ -60,7 +60,7 @@ do
         echo "[$dumpmem] Profile: $profile"  | tee -a $dumpmem.log
         echo $profile > $dumpmem.profile
         mkdir $dumpmem.output 2>/dev/null
-        for plugin in amcache auditpol clipboard cmdline cmdscan connections connscan consoles devicetree dlllist envars filescan getservicesids getsids hashdump hivelist iehistory ldrmodules lsadump malfind mbrparser mftparser modscan modules mutantscan netscan privs pslist pstree psxview servicediff shellbags shimcache sockets sockscan svcscan symlinkscan timeliner timers userassist; do
+        for plugin in amcache auditpol clipboard cmdline cmdscan connections connscan consoles devicetree dlllist envars filescan getservicesids getsids hashdump hivelist iehistory ldrmodules lsadump malfind mbrparser mftparser modscan modules mutantscan netscan privs pslist psxview servicediff shellbags shimcache sockets sockscan svcscan symlinkscan timeliner timers userassist; do
           while [ `ps aux | grep -v grep | grep -i 'vol.py -f' | wc -l` -gt $CONCURRENCY ]
           do
             sleep 1
@@ -70,7 +70,7 @@ do
         done
 
         # Export some plugins results in ElasticSearch
-        for plugin in amcache auditpol clipboard cmdline cmdscan connections connscan consoles devicetree dlllist envars filescan getservicesids getsids hashdump hivelist iehistory ldrmodules lsadump malfind mbrparser mftparser modscan modules mutantscan netscan privs pslist pstree psxview servicediff shellbags shimcache sockets sockscan svcscan symlinkscan timeliner timers userassist; do
+        for plugin in amcache auditpol clipboard cmdline cmdscan connections connscan consoles devicetree dlllist envars filescan getservicesids getsids hashdump hivelist iehistory ldrmodules lsadump malfind mbrparser mftparser modscan modules mutantscan netscan privs pslist psxview servicediff shellbags shimcache sockets sockscan svcscan symlinkscan timeliner timers userassist; do
           while [ `ps aux | grep -v grep | grep -i 'vol.py -f' | wc -l` -gt $CONCURRENCY ]
           do
             sleep 1
@@ -78,6 +78,7 @@ do
           echo "[$dumpmem] Launch: $plugin"  | tee -a $dumpmem.log
           $VOLATILITY -f $dumpmem --profile=$profile --kdbg=$kdbg --dtb=$dtb --output=elastic --elastic-url="http://$ES_host:$ES_port" --index=$ES_index.$DMP_filename $plugin & 
         done
+        $VOLATILITY -f $dumpmem --profile=$profile --kdbg=$kdbg --dtb=$dtb --output=elastic --elastic-url="http://$ES_host:$ES_port" --index=$ES_index.$DMP_filename pstree -v & 
 
 
         # Generate timeline in ElasticSearch
@@ -95,6 +96,9 @@ do
         psort.py --output_time_zone UTC -o elastic --server $ES_host --port $ES_port --flush_interval 50 --raw_fields --index_name $ES_index.$DMP_filename.timeline $dumpmem.output/memory-timeline.plaso
 
         # Hardening analyse
+        ## List all running processes and full path of binaries
+        $VOLATILITY -f $dumpmem --profile=$profile --kdbg=$kdbg --dtb=$dtb pstree -v | tee $dumpmem.output/pstree & 
+        
         ## Extract all registry
         mkdir $dumpmem.output/dumpregistry-output
         $VOLATILITY -f $dumpmem --profile=$profile --kdbg=$kdbg --dtb=$dtb dumpregistry -D $dumpmem.output/dumpregistry-output | tee $dumpmem.output/dumpregistry
