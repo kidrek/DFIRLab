@@ -29,15 +29,16 @@ cd $DMP_dir 1>/dev/null
 ## Yarascan
 wget https://gist.githubusercontent.com/andreafortuna/29c6ea48adf3d45a979a78763cdc7ce9/raw/4ec711d37f1b428b63bed1f786b26a0654aa2f31/malware_yara_rules.py -O ./malware_yara_rules.py &
 mkdir rules 2>/dev/null
-python malware_yara_rules.py &
+python malware_yara_rules.py 
 
 
-for dumpmem in `find $DMP_dir -type f | egrep '*\.dmp$|*\.vmem$' | grep -v '.output' 2>/dev/null`; 
+for dumpmem in `find $DMP_dir -type f | egrep '*\.mem$|*\.dmp$|*\.vmem$' | grep -v '.output' 2>/dev/null`; 
 do 
+  echo $dumpmem
   DMP_filename=`basename $dumpmem | tr '[:upper:]' '[:lower:]'`
   ## exit if dump has been already analysed
   if [ -f $dumpmem.imageinfo ]; then 
-    echo "$dumpmem already analyzed"; break 
+    echo "$dumpmem already analyzed";  
   else
     ## Identify profile from dump memory
     echo "[$dumpmem] Start profile identification" | tee -a $dumpmem.log
