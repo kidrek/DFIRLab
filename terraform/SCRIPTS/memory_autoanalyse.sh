@@ -61,25 +61,26 @@ do
         echo "[$dumpmem] Profile: $profile"  | tee -a $dumpmem.log
         echo $profile > $dumpmem.profile
         mkdir $dumpmem.output 2>/dev/null
-        for plugin in amcache auditpol clipboard cmdline cmdscan connections connscan consoles devicetree dlllist envars filescan getservicesids getsids hashdump hivelist iehistory ldrmodules lsadump malfind mbrparser mftparser modscan modules mutantscan netscan privs pslist psxview servicediff shellbags shimcache sockets sockscan svcscan symlinkscan timeliner timers userassist; do
+
+        ## List all running processes and full path of binaries
+        for plugin in amcache attributeht auditpol autoruns cachedump clipboard cmdline cmdscan connections connscan consoles chromecookies chromedownloadchains chromedownloads chromehistory devicetree dlllist envars filescan firefoxcookies firefoxdownloads firefoxhistory getservicesids getsids hashdump hivelist iehistory ldrmodules lsadump malfind "malfinddeep -W" "malprocfind -a -x" malsysproc mbrparser mftparser mimikatz modscan modules mutantscan ndispktscan netscan openvpn privs pslist "pstree -v" "psxview --apply-rules" rsakey schtasks servicediff shellbags shimcache sockets sockscan svcscan symlinkscan timeliner timers truecryptmaster truecryptpassphrase truecryptsummary trustrecords userassist "usnparser -S -C"; do
           while [ `ps aux | grep -v grep | grep -i 'vol.py -f' | wc -l` -gt $CONCURRENCY ]
           do
             sleep 1
           done
           echo "[$dumpmem] Launch: $plugin"  | tee -a $dumpmem.log
-          task $dumpmem $profile $kdbg $dtb $plugin | tee $dumpmem.output/$plugin & 
+          task $dumpmem $profile $kdbg $dtb "$plugin" | tee $dumpmem.output/${plugin// /_} & 
         done
 
         # Export some plugins results in ElasticSearch
-        for plugin in amcache auditpol clipboard cmdline cmdscan connections connscan consoles devicetree dlllist envars filescan getservicesids getsids hashdump hivelist iehistory ldrmodules lsadump malfind mbrparser mftparser modscan modules mutantscan netscan privs pslist psxview servicediff shellbags shimcache sockets sockscan svcscan symlinkscan timeliner timers userassist; do
+        for plugin in amcache attributeht auditpol autoruns cachedump clipboard cmdline cmdscan connections connscan consoles chromecookies chromedownloadchains chromedownloads chromehistory devicetree dlllist envars filescan firefoxcookies firefoxdownloads firefoxhistory getservicesids getsids hashdump hivelist iehistory ldrmodules lsadump malfind "malfinddeep -W" "malprocfind -a -x" malsysproc mbrparser mftparser mimikatz modscan modules mutantscan ndispktscan netscan openvpn privs pslist "pstree -v" "psxview --apply-rules" rsakey schtasks servicediff shellbags shimcache sockets sockscan svcscan symlinkscan timeliner timers truecryptmaster truecryptpassphrase truecryptsummary trustrecords userassist "usnparser -S -C"; do
           while [ `ps aux | grep -v grep | grep -i 'vol.py -f' | wc -l` -gt $CONCURRENCY ]
           do
             sleep 1
           done
           echo "[$dumpmem] Launch: $plugin"  | tee -a $dumpmem.log
-          $VOLATILITY -f $dumpmem --profile=$profile --kdbg=$kdbg --dtb=$dtb --output=elastic --elastic-url="http://$ES_host:$ES_port" --index=$ES_index.$DMP_filename $plugin & 
+          $VOLATILITY -f $dumpmem --profile=$profile --kdbg=$kdbg --dtb=$dtb --output=elastic --elastic-url="http://$ES_host:$ES_port" --index=$ES_index.$DMP_filename "$plugin" & 
         done
-        $VOLATILITY -f $dumpmem --profile=$profile --kdbg=$kdbg --dtb=$dtb --output=elastic --elastic-url="http://$ES_host:$ES_port" --index=$ES_index.$DMP_filename pstree -v & 
 
 
         # Generate timeline in ElasticSearch
@@ -97,9 +98,6 @@ do
         psort.py --output_time_zone UTC -o elastic --server $ES_host --port $ES_port --flush_interval 50 --raw_fields --index_name $ES_index.$DMP_filename.timeline $dumpmem.output/memory-timeline.plaso
 
         # Hardening analyse
-        ## List all running processes and full path of binaries
-        $VOLATILITY -f $dumpmem --profile=$profile --kdbg=$kdbg --dtb=$dtb pstree -v | tee $dumpmem.output/pstree & 
-        
         ## Extract all registry
         mkdir $dumpmem.output/dumpregistry-output
         $VOLATILITY -f $dumpmem --profile=$profile --kdbg=$kdbg --dtb=$dtb dumpregistry -D $dumpmem.output/dumpregistry-output | tee $dumpmem.output/dumpregistry
@@ -108,10 +106,10 @@ do
         mkdir $dumpmem.output/malfind-output
         $VOLATILITY -f $dumpmem --profile=$profile --kdbg=$kdbg --dtb=$dtb malfind -D $dumpmem.output/malfind-output | tee $dumpmem.output/malfind
         ## Look for interesting privileges
-        $VOLATILITY -f $dumpmem --profile=$profile --kdbg=$kdbg --dtb=$dtb privs | tee $dumpmem.output/privs
+        #$VOLATILITY -f $dumpmem --profile=$profile --kdbg=$kdbg --dtb=$dtb privs | tee $dumpmem.output/privs
         cat $dumpmem.output/privs | grep Enabled | grep "SeImpersonatePrivilege\|SeAssignPrimaryPrivilege\|SeTcbPrivilege\|SeBackupPrivilege\|SeRestorePrivilege\|SeCreateTokenPrivilege\|SeLoadDriverPrivilege\|SeTakeOwnershipPrivilege\|SeDebugPrivilege" | tee $dumpmem.output/privs.interesting_privileges & 
         ## Look for process with admin privileges
-        $VOLATILITY -f $dumpmem --profile=$profile --kdbg=$kdbg --dtb=$dtb getsids | tee $dumpmem.output/getsids
+        #$VOLATILITY -f $dumpmem --profile=$profile --kdbg=$kdbg --dtb=$dtb getsids | tee $dumpmem.output/getsids
         cat $dumpmem.output/getsids | grep -i admin | tee $dumpmem.output/getsids.process_with_admin_privileges
 
         #### SCAN with tools
