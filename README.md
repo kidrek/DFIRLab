@@ -180,6 +180,9 @@ cd ./terraform/
 ./build.sh
 ```
 
+Une fois déployée, le lab est accessible via une connexion VPN. 
+Les preuves pourront être envoyées sur le serveur Samba, puis analysées.
+
 ### 2.3 Tips
 
 Packer et Terraform utilisent une connexion SSH sur les machines virtuelles nouvellement créées pour y installer des paquets ou y appliquer certaines configurations. Afin d'éviter l'attente d'une validation 'Fingerprint' durant le déploiement, j'ai du appliquer la configuration suivante :
@@ -193,3 +196,23 @@ Host *
   ControlPath /tmp/socket-%r@%h:%p
   ControlPersist 3600
 ```
+
+
+## 3. Analyse des preuves
+
+### 3.1 Analyse statique
+* via Tsurugi
+La distribution Tsurugi est composée de nombreux si ce n'est de l'intégralité des outils nécessaires pour mener à bien une investigation numérique.
+Les preuves sont accessibles via le partage réseau fourni par le serveur Samba.
+
+- Seul le script ```/media/evidences/MEMORY/memory_autoanalyse.sh``` a été pour le moment ajouté. Il permet d'analyser de manière automatisée un prélèvement mémoire d'un système Windows. 
+
+
+* via la machine virtuelle Win10
+
+
+### 3.2 Analyse dynamique
+* via Cuckoo sandbox / CAPEv2
+
+TODO
+
