@@ -7,7 +7,7 @@ Elle est actuellement constituée :
 * d'un serveur de fichier SAMBA
 * d'un serveur d'analyse, contenant une instance ELK
 * d'un serveur d'analyse en sandbox Cuckoo/Capev2
-* de deux machines contenant des outils d'analyse Forensic, en environnement Debian et Microsoft Windows.
+* de deux machines contenant des outils d'analyse Forensic, Tsurugi (Ubuntu) et un environnement Microsoft Windows.
 
 Les preuves sont à transférer vers le serveur de stockage (Samba). 
 Une fois le transfert effectué, elles seront accessibles des autres serveurs.
