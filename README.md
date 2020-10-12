@@ -201,14 +201,15 @@ Host *
 ## 3. Analyse des preuves
 
 ### 3.1 Analyse statique
-* via Tsurugi
+#### via Tsurugi
 La distribution Tsurugi est composée de nombreux si ce n'est de l'intégralité des outils nécessaires pour mener à bien une investigation numérique.
 Les preuves sont accessibles via le partage réseau fourni par le serveur Samba.
 
-- Seul le script ```/media/evidences/MEMORY/memory_autoanalyse.sh``` a été pour le moment ajouté. Il permet d'analyser de manière automatisée un prélèvement mémoire d'un système Windows. 
+Seul le script ```/media/evidences/MEMORY/memory_autoanalyse.sh``` a été pour le moment ajouté. Il permet d'analyser de manière automatisée un prélèvement mémoire d'un système Windows. 
+Il va déterminer seul le profil adéquat puis exécuter les différents plugins de l'outil **Volatility**. Les résultats seront analysés à leur tour par **Loki**, **Clamav** et **Yara** puis envoyés à l'instance **ElasticSearch**.
 
 
-* via la machine virtuelle Win10
+#### via la machine virtuelle Win10
 
 
 ### 3.2 Analyse dynamique
