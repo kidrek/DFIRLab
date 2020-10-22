@@ -169,6 +169,15 @@ cd ./packer/template-debian10/
 ./build.sh
 ```
 
+Cependant toute cette phase de génération de template ne peut être automatisée dans son intégralité.
+En effet il n'est pas possible pour le moment d'installer de manière automatisée la distribution Tsurugi. Il n'est pas possible non plus d'interagir via Terraform lors du déploiement car le service SSH n'est pas activé de base (ce qui est une très bonne chose en soit).
+Il est donc nécessaire dans un premier temps de télécharger la machine virtuelle Tsurugi mise à disposition sur leur site : https://tsurugi-linux.org/downloads.php.
+Puis l'importer pour y apporter les modifications nécessaires et enfin l'exporter au format OVA pour que terraform puisse la déployer. 
+Voici les actions à mener : 
+
+* Activer le SSH.
+* Configurer le SSH pour autoriser une authentification avec la clé privée générée précédemment, ou veiller à ce que le compte utilisateur tsurugi ait comme mot de passe "tsurugi".
+
 
 ### 2.2. Déploiement de la plateforme via Terraform
 
