@@ -95,7 +95,7 @@ do
         mactime -z UTC -y -d -b $dumpmem.output/memory-timeline.body > $dumpmem.output/memory-timeline.csv
         log2timeline.py --artifact_definitions /usr/local/share/artifacts/ --parsers "mactime" --no_dependencies_check  -z UTC /dev/shm/memory-timeline.plaso $dumpmem.output/memory-timeline.body 
         mv /dev/shm/memory-timeline.plaso $dumpmem.output/
-        psort.py --output_time_zone UTC -o elastic --server $ES_host --port $ES_port --flush_interval 50 --raw_fields --index_name $ES_index.$DMP_filename.timeline $dumpmem.output/memory-timeline.plaso
+        psort.py --output-time-zone UTC -o elastic --server $ES_host --port $ES_port --flush_interval 50 --raw_fields --index_name $ES_index.$DMP_filename.timeline $dumpmem.output/memory-timeline.plaso
 
         # Hardening analyse
         ## Extract all registry
@@ -106,10 +106,8 @@ do
         mkdir $dumpmem.output/malfind-output
         $VOLATILITY -f $dumpmem --profile=$profile --kdbg=$kdbg --dtb=$dtb malfind -D $dumpmem.output/malfind-output | tee $dumpmem.output/malfind
         ## Look for interesting privileges
-        #$VOLATILITY -f $dumpmem --profile=$profile --kdbg=$kdbg --dtb=$dtb privs | tee $dumpmem.output/privs
         cat $dumpmem.output/privs | grep Enabled | grep "SeImpersonatePrivilege\|SeAssignPrimaryPrivilege\|SeTcbPrivilege\|SeBackupPrivilege\|SeRestorePrivilege\|SeCreateTokenPrivilege\|SeLoadDriverPrivilege\|SeTakeOwnershipPrivilege\|SeDebugPrivilege" | tee $dumpmem.output/privs.interesting_privileges & 
         ## Look for process with admin privileges
-        #$VOLATILITY -f $dumpmem --profile=$profile --kdbg=$kdbg --dtb=$dtb getsids | tee $dumpmem.output/getsids
         cat $dumpmem.output/getsids | grep -i admin | tee $dumpmem.output/getsids.process_with_admin_privileges
 
         #### SCAN with tools
