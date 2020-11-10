@@ -52,7 +52,9 @@
       "type": "shell",
       "inline": [
         "sudo apt update && sudo apt upgrade -y",
-        "sudo apt install -y open-vm-tools htop net-tools ifplugd resolvconf",
+        "sudo apt install -y open-vm-tools htop net-tools ifplugd resolvconf vim",
+        "echo 'alias ll=\"ls -la\" >> $HOME/.bashrc'; echo 'alias ll=\"ls -la\"' | sudo tee -a /root/.bashrc;",
+        "echo 'set mouse-=a' > $HOME/.vimrc; echo 'set mouse-=a' | sudo tee /root/.vimrc",
         "echo 'auto eth0' | sudo tee -a /etc/network/interfaces",
         "echo 'iface eth0 inet dhcp' | sudo tee -a /etc/network/interfaces",
         "echo 'pre-up sleep 2' | sudo tee -a /etc/network/interfaces",
