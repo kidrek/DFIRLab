@@ -92,10 +92,11 @@ do
         cat $dumpmem.output/mftparser.body >> $dumpmem.output/memory-timeline.tmp.body
         cat $dumpmem.output/shellbags.body >> $dumpmem.output/memory-timeline.tmp.body
         sort -u $dumpmem.output/memory-timeline.tmp.body > $dumpmem.output/memory-timeline.body
-        mactime -z UTC -y -d -b $dumpmem.output/memory-timeline.body > $dumpmem.output/memory-timeline.csv
+        mactime -z UTC -y -d -b $dumpmem.output/memory-timeline.body > $dumpmem.output/memory-timeline-mactime.csv
         log2timeline.py --artifact_definitions /usr/local/share/artifacts/ --parsers "mactime" --no_dependencies_check  -z UTC /dev/shm/memory-timeline.plaso $dumpmem.output/memory-timeline.body 
         mv /dev/shm/memory-timeline.plaso $dumpmem.output/
-        psort.py --output-time-zone UTC -o elastic --server $ES_host --port $ES_port --flush_interval 50 --raw_fields --index_name $ES_index.$DMP_filename.timeline $dumpmem.output/memory-timeline.plaso
+        psort.py -z UTC -o elastic --server $ES_host --port $ES_port --flush_interval 50 --raw_fields --index_name $ES_index.$DMP_filename.timeline $dumpmem.output/memory-timeline.plaso
+        psort.py -z UTC -o l2tcsv $dumpmem.output/memory-timeline-psort.csv $dumpmem.output/memory-timeline.plaso
 
         # Hardening analyse
         ## Extract all registry
