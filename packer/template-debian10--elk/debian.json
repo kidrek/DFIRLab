@@ -1,0 +1,77 @@
+{
+  "builders": [
+    {
+      "type": "vmware-iso",
+      "name": "template-Debian10--elk",
+      "vm_name": "template-Debian10--elk",
+      "cpus":"4",
+      "memory":"2048",
+      "Version": "12",
+      "guest_os_type": "debian10-64",
+      "vmx_data": {
+        "ethernet0.networkName": "{{ user `esxi_network_portgroup` }}",
+        "ethernet0.virtualDev": "e1000",
+        "ethernet0.present": "TRUE",
+        "virtualHW.version": "10",
+        "scsi0.virtualDev": "lsisas1068"
+      },
+
+      "remote_type": "esx5",
+      "remote_host": "{{ user `esxi_host` }}",
+      "remote_username": "{{ user `esxi_user` }}",
+      "remote_password": "{{ user `esxi_password` }}",
+      "remote_datastore": "{{ user `esxi_datastore` }}",
+      "skip_validate_credentials": true,
+      "format": "ova",
+      "output_directory": "../ova/",
+
+      "iso_url": "../ISO/debian-10.5.0-amd64-netinst.iso",
+      "iso_checksum": "md5:a3ebc76aec372808ad80000108a2593a",
+      "boot_wait": "5s",
+      "boot_command": [
+        "<esc><wait>",
+        "auto <wait>",
+        "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg <wait>",
+        "<enter><wait>"
+      ],
+      "http_directory": "http",
+      "ssh_username":"analyste",
+      "ssh_private_key_file":"../FILES/analyste.key",
+      "ssh_keypair_name":"analyste.key",
+      "ssh_wait_timeout": "1800s",
+
+      "shutdown_command": "echo Packer | sudo -S shutdown -P now",
+      "headless": true,
+      "vnc_disable_password": true,
+      "vnc_bind_address": "127.0.0.1",
+      "keep_registered": false
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "echo 'dfirlab-elk' | sudo tee /etc/hostname",
+        "echo '127.0.0.1    dfirlab-elk' | sudo tee /etc/hosts",
+        "sudo apt update && sudo apt upgrade -y",
+        "sudo apt install -y open-vm-tools htop net-tools ifplugd resolvconf vim git-core docker-compose",
+        "echo 'alias ll=\"ls -la\" >> $HOME/.bashrc'; echo 'alias ll=\"ls -la\"' | sudo tee -a /root/.bashrc;",
+        "echo 'set mouse-=a' > $HOME/.vimrc; echo 'set mouse-=a' | sudo tee /root/.vimrc",
+        "echo 'auto eth0' | sudo tee -a /etc/network/interfaces",
+        "echo 'iface eth0 inet dhcp' | sudo tee -a /etc/network/interfaces",
+        "echo 'pre-up sleep 2' | sudo tee -a /etc/network/interfaces",
+        "sudo sed -i -e 's/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX=\"net.ifnames=0 biosdevname=0\"/g' /etc/default/grub",
+        "sudo grub-mkconfig -o /boot/grub/grub.cfg",
+        "sudo sed -i -e 's/INTERFACES=.*/INTERFACES=\"eth0\"/g' /etc/default/ifplugd",
+        "sudo useradd elk",
+        "sudo usermod -a -G docker elk",
+        "sudo mkdir /opt/docker-elk",
+        "sudo chown -R elk: /opt/docker-elk",
+        "sudo -u elk git clone https://github.com/deviantony/docker-elk.git /opt/docker-elk",
+        "sudo -u elk sed -i 's/xpack.security.enabled: true/xpack.security.enabled: false/g'  /opt/docker-elk/elasticsearch/config/elasticsearch.yml",
+        "sudo /etc/init.d/docker start",
+        "cd /opt/docker-elk; sudo -u elk docker-compose up -d"
+        ]
+    }
+  ]
+}
