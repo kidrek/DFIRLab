@@ -3,7 +3,7 @@ resource "esxi_guest" "dfirlab-tsurugi" {
   guest_name            = "DFIRLab-${count.index + 1}-tsurugi"
   notes                 = "Contact : me"
   disk_store            = var.datastore
-  memsize               = "2048"
+  memsize               = "4096"
   numvcpus              = "4"
   power                 = "on"
   guest_startup_timeout = "180"
@@ -48,7 +48,11 @@ resource "esxi_guest" "dfirlab-tsurugi" {
       "sudo mkdir /media/evidences/",
       "echo '//10.1.1.15/evidences /media/evidences cifs guest,rw,iocharset=utf8 0 0' | sudo tee -a /etc/fstab",
       "sudo /sbin/mount.cifs //10.1.1.15/evidences /media/evidences -o guest,rw,iocharset=utf8; sudo chmod -R 777 /media/evidences",
+      "cd /opt/volatility; sudo wget https://patch-diff.githubusercontent.com/raw/volatilityfoundation/volatility/pull/563.patch; sudo patch -fs -p1  < ./563.patch",
+      "cd /opt/volatility; sudo python setup.py install",
       "sudo git clone https://github.com/Neo23x0/Loki.git /opt/Loki; cd /opt/Loki; sudo apt install -y python-pip; sudo pip2 install -r requirements.txt; sudo python2 loki.py --update;",
+       "sudo apt update; sudo apt -y install libpcre3 libpcre3-dbg libpcre3-dev build-essential autoconf automake libtool libpcap-dev libnet1-dev libyaml-0-2 libyaml-dev zlib1g zlib1g-dev libmagic-dev libcap-ng-dev libjansson-dev pkg-config rustc cargo",
+       "cd /opt/; sudo wget https://www.openinfosecfoundation.org/download/suricata-5.0.4.tar.gz; sudo tar xvzf suricata-5.0.4.tar.gz; cd suricata-5.0.4; sudo ./configure --enable-nfqueue --prefix=/usr --sysconfdir=/etc --localstatedir=/var; sudo make; sudo make install-full",
       "echo 'up route add -net 10.8.0.0/24 gw 10.1.1.254 dev ens34' | sudo tee -a /etc/network/interfaces",
       "sudo shutdown -r +1"
     ]
