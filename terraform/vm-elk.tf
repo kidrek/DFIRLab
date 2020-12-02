@@ -4,8 +4,8 @@ resource "esxi_guest" "dfirlab-elk" {
   notes                 = "Contact : me"
   disk_store            = var.datastore
   boot_disk_type        = "thin"
-  memsize               = "2048"
-  numvcpus              = "2"
+  memsize               = "6048"
+  numvcpus              = "4"
   power                 = "on"
   guest_startup_timeout = "180"
   ovf_source            = "../packer/ova/template-Debian10--elk.ova"
@@ -40,6 +40,7 @@ resource "esxi_guest" "dfirlab-elk" {
       "sudo ifup eth1",
       "echo 'up route add -net 10.8.0.0/24 gw 10.1.1.254 dev eth1' | sudo tee -a /etc/network/interfaces",
       "( sudo crontab -l; echo \"@reboot sleep 30 && cd /opt/docker-elk; sudo -u elk docker-compose up -d 1>/dev/null 2>&1\" ) | sudo crontab  -",
+      "cd /opt/timesketch/; sudo -u elk docker-compose exec timesketch-web tsctl add_user -u analyste -p analyste",
       "sudo shutdown -r +1"
     ]
   }
