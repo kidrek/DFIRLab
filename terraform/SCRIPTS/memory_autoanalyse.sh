@@ -11,7 +11,7 @@ ES_host="10.1.1.11"
 ES_port="9200"
 ES_index="volatility"
 ## Dump memory to analyse
-DMP_dir=/media/evidences/
+DMP_dir=/media/evidences/MEMORY/
 
 ## Function to launch volatility plugin
 task(){
@@ -167,7 +167,7 @@ do
       bulk_extractor -x all -e net -o $dumpmem.output/packet/ $dumpmem
       cat $dumpmem.output/packet/ip.txt  | grep -v "#" | awk -F" " '{print $2}' | sort -u | tee $dumpmem.output/packet/ip--uniq.txt
       suricata -c /etc/suricata/suricata.yaml -l $dumpmem.output/packet/ -r $dumpmem.output/packet/packets.pcap
-      cp fast.log $dumpmem.output/analyse.suricata.log
+      cp $dumpmem.output/packet/fast.log $dumpmem.output/analyse.suricata.log
 
 
       ## List all running processes and full path of binaries
