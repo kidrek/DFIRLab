@@ -54,7 +54,8 @@
         "echo 'dfirlab-elk' | sudo tee /etc/hostname",
         "echo '127.0.0.1    dfirlab-elk' | sudo tee /etc/hosts",
         "sudo apt update && sudo apt upgrade -y",
-        "sudo apt install -y open-vm-tools htop net-tools ifplugd resolvconf vim git-core docker-compose",
+        "sudo apt install -y open-vm-tools htop net-tools ifplugd resolvconf vim git-core apt-transport-https ca-certificates curl gnupg2 software-properties-common suricata",
+        "curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -; sudo add-apt-repository \"deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable\"; sudo apt update; sudo apt install -y docker-ce",
         "echo 'alias ll=\"ls -la\" >> $HOME/.bashrc'; echo 'alias ll=\"ls -la\"' | sudo tee -a /root/.bashrc;",
         "echo 'set mouse-=a' > $HOME/.vimrc; echo 'set mouse-=a' | sudo tee /root/.vimrc",
         "echo 'auto eth0' | sudo tee -a /etc/network/interfaces",
@@ -65,12 +66,18 @@
         "sudo sed -i -e 's/INTERFACES=.*/INTERFACES=\"eth0\"/g' /etc/default/ifplugd",
         "sudo useradd elk",
         "sudo usermod -a -G docker elk",
+        "sudo /etc/init.d/docker start",
+	"sudo curl -L \"https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)\" -o /usr/local/bin/docker-compose; sudo chmod +x /usr/local/bin/docker-compose; sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose",
         "sudo mkdir /opt/docker-elk",
         "sudo chown -R elk: /opt/docker-elk",
         "sudo -u elk git clone https://github.com/deviantony/docker-elk.git /opt/docker-elk",
         "sudo -u elk sed -i 's/xpack.security.enabled: true/xpack.security.enabled: false/g'  /opt/docker-elk/elasticsearch/config/elasticsearch.yml",
-        "sudo /etc/init.d/docker start",
-        "cd /opt/docker-elk; sudo -u elk docker-compose up -d"
+        "cd /opt/docker-elk; sudo -u elk docker-compose up -d",
+        "sudo git clone https://github.com/Neo23x0/sigma /opt/sigma",
+        "cd /opt/; sudo curl -s -O https://raw.githubusercontent.com/google/timesketch/master/contrib/deploy_timesketch.sh; sudo chmod 755 deploy_timesketch.sh; sudo ./deploy_timesketch.sh",
+        "cd /opt; sudo cp -rf sigma/rules/windows/ timesketch/etc/timesketch/sigma/rules/",
+        "cd /opt; sudo cp -rf sigma/rules/linux/ timesketch/etc/timesketch/sigma/rules/",
+	"cd /opt/timesketch; sudo docker-compose up -d"
         ]
     }
   ]
