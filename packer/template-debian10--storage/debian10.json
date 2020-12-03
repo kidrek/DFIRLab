@@ -26,8 +26,8 @@
       "format": "ova",
       "output_directory": "../ova/",
 
-      "iso_url": "../ISO/debian-10.5.0-amd64-netinst.iso",
-      "iso_checksum": "md5:a3ebc76aec372808ad80000108a2593a",
+      "iso_url": "../ISO/debian-10.6.0-amd64-netinst.iso",
+      "iso_checksum": "md5:42c43392d108ed8957083843392c794b",
       "boot_wait": "5s",
       "boot_command": [
         "<esc><wait>",
@@ -45,6 +45,8 @@
       "headless": true,
       "vnc_disable_password": true,
       "vnc_bind_address": "127.0.0.1",
+      "vnc_over_websocket": true,
+      "insecure_connection": true,
       "keep_registered": false
     }
   ],

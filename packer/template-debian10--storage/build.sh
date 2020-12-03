@@ -19,8 +19,6 @@ sed "s/<password_root>/$password_root/; s/<password_analyste>/$password_analyste
 ## Generate new ova
 export PACKER_LOG=1; packer build -var-file=../variables.json debian10.json | tee -a build.log
 
-## Flush memory cache
-echo 3 | sudo tee /proc/sys/vm/drop_caches
 ## Remove temp files
 rm -rf ./packer_cache
 rm -rf ./http/preseed.cfg
