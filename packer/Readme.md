@@ -20,59 +20,10 @@ Une fois téléchargé, le binaire devra être placé dans un répertoire du PAT
 
 ## Pré-requis
 
-Packer utilise le protocole VNC pour l'installation des systèmes d'exploitation.
-J'utilise dans mon cas un ESXi free, j'ai du ajouter via une connexion SSH sur l'hyperviseur une règle sur le parefeu pour authoriser le traffic VNC. 
-Cette règle devra être accompagnée de l'adresse ip publique utilisée par le serveur Packer.
+Certains pré-requis sont nécessaires à l'utilisation de PACKER.
+Dans un premier temps, activez le service SSH sur l'hyperviseur. Puis une fois connecté, exécutez la commande suivante pour que Packer puisse interagir avec les machines virtuelles.
 
 ```
-#!/bin/sh
-
-## source : https://gist.github.com/Nonymus/6b8cc7653072fe7af74e064104717ad7
-
-mkdir /store/firewall
-
-# Copy the service.xml firewall rules to a central storage
-# so they can survive reboot
-cp /etc/vmware/firewall/service.xml /store/firewall
-
-# Remove end tag so rule addition works as expected
-sed -i "s/<\/ConfigRoot>//" /store/firewall/service.xml
-
-# Add rule for vnc connections
-echo "
-  <service id='0033'>
-    <id>vnc</id>
-    <rule id='0000'>
-      <direction>inbound</direction>
-      <protocol>tcp</protocol>
-      <porttype>dst</porttype>
-      <port>
-        <begin>5900</begin>
-        <end>6000</end>
-      </port>
-    </rule>
-    <enabled>true</enabled>
-    <required>true</required>
-  </service>
-</ConfigRoot>" >> /store/firewall/service.xml
-
-# Copy updated service.xml firewall rules to expected location
-# Refresh the firewall rules
-chmod 0644 /etc/vmware/firewall/service.xml
-chmod +t /etc/vmware/firewall/service.xml
-cat /store/firewall/service.xml > /etc/vmware/firewall/service.xml
-chmod 0444 /etc/vmware/firewall/service.xml
-chmod -t /etc/vmware/firewall/service.xml
-esxcli network firewall refresh
-sed -i "s/exit 0//" /etc/rc.local.d/local.sh
-
-# Add steps to profile.local to repeat these steps on reboot
-echo "
-chmod 0644 /etc/vmware/firewall/service.xml
-chmod +t /etc/vmware/firewall/service.xml
-cat /store/firewall/service.xml > /etc/vmware/firewall/service.xml
-chmod 0444 /etc/vmware/firewall/service.xml
-chmod -t /etc/vmware/firewall/service.xml
-esxcli network firewall refresh
-exit 0" >> /etc/rc.local.d/local.sh
+esxcli system settings advanced set -o /Net/GuestIPHack -i 1
 ```
+
