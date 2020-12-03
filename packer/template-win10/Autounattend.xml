@@ -237,6 +237,11 @@
                     <Description>Choco -- install package</Description>
                     <Order>104</Order>
                 </SynchronousCommand>
+                <SynchronousCommand wcm:action="add">
+                    <CommandLine>cmd.exe /c C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe -File a:\rearm-windows.ps1</CommandLine>
+                    <Description>Reset windows evaluation time</Description>
+                    <Order>105</Order>
+                </SynchronousCommand>
             </FirstLogonCommands>
             <ShowWindowsLive>false</ShowWindowsLive>
         </component>
