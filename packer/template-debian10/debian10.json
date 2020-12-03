@@ -9,7 +9,7 @@
       "Version": "12",
       "guest_os_type": "debian10-64",
       "vmx_data": {
-        "ethernet0.networkName": "<portgroup>",
+        "ethernet0.networkName": "{{ user `esxi_network_portgroup` }}",
         "ethernet0.virtualDev": "e1000",
         "ethernet0.present": "TRUE",
         "virtualHW.version": "10",
@@ -17,16 +17,16 @@
       },
 
       "remote_type": "esx5",
-      "remote_host": "<esxi_host>",
-      "remote_username": "<esxi_user>",
-      "remote_password": "<esxi_password>",
-      "remote_datastore": "<esxi_datastore>",
+      "remote_host": "{{ user `esxi_host` }}",
+      "remote_username": "{{ user `esxi_user` }}",
+      "remote_password": "{{ user `esxi_password` }}",
+      "remote_datastore": "{{ user `esxi_datastore` }}",
       "skip_validate_credentials": true,
       "format": "ova",
       "output_directory": "../ova/",
 
-      "iso_url": "../ISO/debian-10.5.0-amd64-netinst.iso",
-      "iso_checksum": "md5:a3ebc76aec372808ad80000108a2593a",
+      "iso_url": "../ISO/debian-10.6.0-amd64-netinst.iso",
+      "iso_checksum": "md5:42c43392d108ed8957083843392c794b",
       "boot_wait": "5s",
       "boot_command": [
         "<esc><wait>",
@@ -44,7 +44,9 @@
       "headless": true,
       "vnc_disable_password": true,
       "vnc_bind_address": "127.0.0.1",
-      "keep_registered": true
+      "vnc_over_websocket": true,
+      "insecure_connection": true,
+      "keep_registered": false
     }
   ],
   "provisioners": [
