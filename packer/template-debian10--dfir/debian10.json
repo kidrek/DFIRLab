@@ -1,0 +1,79 @@
+{
+  "builders": [
+    {
+      "type": "vmware-iso",
+      "name": "template-Debian10--dfir",
+      "vm_name": "template-Debian10--dfir",
+      "cpus":"4",
+      "memory":"6144",
+      "Version": "12",
+      "guest_os_type": "debian10-64",
+      "vmx_data": {
+        "ethernet0.networkName": "{{ user `esxi_network_portgroup` }}",
+        "ethernet0.virtualDev": "e1000",
+        "ethernet0.present": "TRUE",
+        "virtualHW.version": "10",
+        "scsi0.virtualDev": "lsisas1068"
+      },
+
+      "remote_type": "esx5",
+      "remote_host": "{{ user `esxi_host` }}",
+      "remote_username": "{{ user `esxi_user` }}",
+      "remote_password": "{{ user `esxi_password` }}",
+      "remote_datastore": "{{ user `esxi_datastore` }}",
+      "skip_validate_credentials": true,
+      "format": "ova",
+      "output_directory": "../ova/",
+
+      "iso_url": "../ISO/debian-10.6.0-amd64-netinst.iso",
+      "iso_checksum": "md5:42c43392d108ed8957083843392c794b",
+      "boot_wait": "5s",
+      "boot_command": [
+        "<esc><wait>",
+        "auto <wait>",
+        "preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg <wait>",
+        "<enter><wait>"
+      ],
+      "http_directory": "http",
+      "ssh_username":"analyste",
+      "ssh_private_key_file":"../FILES/analyste.key",
+      "ssh_keypair_name":"analyste.key",
+      "ssh_wait_timeout": "1800s",
+
+      "shutdown_command": "echo Packer | sudo -S shutdown -P now",
+      "headless": true,
+      "vnc_disable_password": true,
+      "vnc_bind_address": "127.0.0.1",
+      "vnc_over_websocket": true,
+      "insecure_connection": true,
+      "keep_registered": false
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "sudo apt update && sudo apt upgrade -y",
+        "sudo apt install -y open-vm-tools htop net-tools ifplugd resolvconf sudo vim",
+        "sudo apt install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common",
+        "sudo add-apt-repository \"deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable\"",
+        "curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -",
+        "sudo apt update; export DEBIAN_FRONTEND=noninteractive; sudo -E bash -c 'apt install -y python3-pip git-core clamav forensics-full libvshadow-utils qemu-utils libevtx-utils tcpdump tshark cifs-utils docker-ce docker-ce-cli containerd.io'",
+        "echo 'alias ll=\"ls -la\" >> $HOME/.bashrc'; echo 'alias ll=\"ls -la\"' | sudo tee -a /root/.bashrc;",
+        "echo 'set mouse-=a' > $HOME/.vimrc; echo 'set mouse-=a' | sudo tee /root/.vimrc",
+        "echo 'auto eth0' | sudo tee -a /etc/network/interfaces",
+        "echo 'iface eth0 inet dhcp' | sudo tee -a /etc/network/interfaces",
+        "echo 'pre-up sleep 2' | sudo tee -a /etc/network/interfaces",
+        "sudo sed -i -e 's/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX=\"net.ifnames=0 biosdevname=0\"/g' /etc/default/grub",
+        "sudo grub-mkconfig -o /boot/grub/grub.cfg",
+        "sudo sed -i -e 's/INTERFACES=.*/INTERFACES=\"eth0\"/g' /etc/default/ifplugd",
+        "sudo docker run log2timeline/plaso log2timeline.py --version",
+        "sudo git clone https://github.com/Neo23x0/Loki.git /opt/Loki; cd /opt/Loki; sudo apt install -y python-pip; sudo pip2 install -r requirements.txt; yes yes | sudo python2 loki.py --update",
+        "sudo git clone https://github.com/kidrek/docker-capa.git /opt/docker-capa; cd /opt/docker-capa; sudo docker build -t capa .",
+        "sudo apt update; sudo apt -y install libpcre3 libpcre3-dbg libpcre3-dev build-essential autoconf automake libtool libpcap-dev libnet1-dev libyaml-0-2 libyaml-dev zlib1g zlib1g-dev libmagic-dev libcap-ng-dev libjansson-dev pkg-config rustc cargo",
+       "cd /opt/; sudo wget --no-check-certificate https://www.openinfosecfoundation.org/download/suricata-5.0.4.tar.gz; sudo tar xvzf suricata-5.0.4.tar.gz; cd suricata-5.0.4; sudo ./configure --enable-nfqueue --prefix=/usr --sysconfdir=/etc --localstatedir=/var; sudo make; sudo make install-full",
+       "echo 'docker run -v $(pwd):/data log2timeline/plaso log2timeline --no_dependencies_check -u -q --partitions all --volumes all -z UTC --yara_rules /data/malware_rules.yar -f /data/filter_windows.txt  /data/evidences.plaso /data/<evidence>' | sudo tee /opt/readme_plaso"
+        ]
+    }
+  ]
+}
