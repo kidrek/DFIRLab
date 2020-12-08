@@ -84,14 +84,7 @@
        "echo '   writable = yes' | sudo tee -a /etc/samba/smb.conf",
        "echo '   public = yes' | sudo tee -a /etc/samba/smb.conf",
        "echo '   force create mode = 0777' | sudo tee -a /etc/samba/smb.conf",
-       "echo '   force user = root' | sudo tee -a /etc/samba/smb.conf",
-       "sudo chmod -R 777 /media/evidences",
-       "sudo mkdir /media/evidences/documentation",
-       "sudo mkdir /media/evidences/MEMORY",
-       "sudo mkdir -p /media/evidences/HDD/tools",
-       "cd /media/evidences/HDD/tools; sudo wget https://raw.githubusercontent.com/log2timeline/plaso/master/data/filter_windows.txt",
-       "echo 'docker run -v $(pwd):/data log2timeline/plaso log2timeline --no_dependencies_check -u -q --partitions all --volumes all -z UTC --yara_rules /data/malware_rules.yar -f /data/filter_windows.txt  /data/evidences.plaso /data/<evidence>' | sudo tee /media/evidences/HDD/readme_plaso.md",
-       "echo 'docker run -v $(pwd):/data log2timeline/plaso psort -o l2tcsv -w /data/timeline.csv /data/evidences.plaso' | sudo tee -a /media/evidences/HDD/readme_plaso.md"
+       "echo '   force user = root' | sudo tee -a /etc/samba/smb.conf"
         ]
     }
   ]
