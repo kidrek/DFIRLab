@@ -9,10 +9,10 @@ rm -rf $DIRECTORY/$NAME
 ## Remove old log file
 rm -f build.log
 
-
 ## Generate preseed with strong password
 password_root=`../SCRIPTS/generate-password.sh`
-password_analyste=`../SCRIPTS/generate-password.sh`
+#password_analyste=`../SCRIPTS/generate-password.sh`
+password_analyste="analyste"
 analyste_ssh_key=`cat ../FILES/analyste.key.pub`
 sed "s/<password_root>/$password_root/; s/<password_analyste>/$password_analyste/; s|<analyste_ssh_key>|$analyste_ssh_key|" ./http/preseed.cfg.tpl > ./http/preseed.cfg
 
