@@ -1,0 +1,100 @@
+
+resource "esxi_virtual_disk" "vdisk2-sandbox-cape" {
+  count                 = 1
+  virtual_disk_disk_store = var.datastore
+  virtual_disk_dir        = "DFIRLab-${count.index + 1}-Sandbox-CAPE"
+  virtual_disk_size       = 40
+  virtual_disk_type       = "thin"
+}
+
+
+resource "esxi_guest" "dfirlab-sandbox-cape" {
+  count                 = 1
+  guest_name            = "DFIRLab-${count.index + 1}-Sandbox-CAPE"
+  notes                 = "Contact : me"
+  disk_store            = var.datastore
+  boot_disk_type        = "thin"
+  #boot_disk_size        = "100"
+  memsize               = "4096"
+  numvcpus              = "2"
+  power                 = "on"
+  guest_startup_timeout = "180"
+
+  ovf_source = "../packer/ova/template-Ubuntu-2004.ova"
+
+  virtual_disks {
+    virtual_disk_id = esxi_virtual_disk.vdisk2-sandbox-cape[count.index].id
+    slot            = "0:2"
+  }
+
+  network_interfaces {
+    virtual_network = var.network-portgroup-deployment
+    nic_type        = "e1000"
+  }
+
+  network_interfaces {
+    virtual_network = "DFIRLab-${count.index + 1}-vm"
+    nic_type        = "e1000"
+  }
+
+  connection {
+    host        = self.ip_address
+    type        = "ssh"
+    user        = "analyste"
+    private_key = file("../packer/FILES/analyste.key")
+    timeout     = "180s"
+  }
+
+  ## Command executed on remote VM through SSH connection
+  provisioner "remote-exec" {
+    inline = [
+      "echo 'Sandbox-CAPE' | sudo tee /etc/hostname",
+      "sudo apt update; sudo apt install -y bridge-utils cifs-utils cpu-checker libvirt0 libvirt-dev qemu-kvm tcpdump virtinst virt-manager ",
+      "wget https://raw.githubusercontent.com/doomedraven/Tools/master/Sandbox/cape2.sh; chmod +x cape2.sh",
+      "sudo -u analyste -- sh -c 'sudo ./cape2.sh base cape'",
+      "wget https://gist.githubusercontent.com/andreafortuna/29c6ea48adf3d45a979a78763cdc7ce9/raw/4ec711d37f1b428b63bed1f786b26a0654aa2f31/malware_yara_rules.py; mkdir ./rules; python3 malware_yara_rules.py",
+      "wget https://raw.githubusercontent.com/doomedraven/Tools/master/Sandbox/suricata_from_source.sh; chmod +x suricata_from_source.sh; sudo ./suricata_from_source.sh",
+      "sudo wget https://raw.githubusercontent.com/mitre/cti/master/enterprise-attack/enterprise-attack.json -o /opt/CAPEv2/data/mitre_attack.json",
+      "echo -e \"o\nn\np\n1\n\n\nw\" | sudo fdisk /dev/sdb; sudo /usr/sbin/mkfs.ext4 /dev/sdb1",
+      "echo '/dev/sdb1    /var/lib/libvirt/images/  ext4 defaults 0 0'  | sudo tee -a /etc/fstab; sudo mount -a; sudo mkdir -p /var/lib/libvirt/images/; sudo chmod 777 -R /var/lib/libvirt/images/",
+      "echo '127.0.0.1    Sandbox' | sudo tee /etc/hosts",
+      "echo '  renderer: networkd' | sudo tee -a /etc/netplan/00-installer-config.yaml",
+      "echo '  ethernets:' | sudo tee -a /etc/netplan/00-installer-config.yaml",
+      "echo '    ens32:' | sudo tee -a /etc/netplan/00-installer-config.yaml",
+      "echo '      dhcp4: true' | sudo tee -a /etc/netplan/00-installer-config.yaml",
+      "echo '    ens33:' | sudo tee -a /etc/netplan/00-installer-config.yaml",
+      "echo '      addresses: [10.1.1.14/24]' | sudo tee -a /etc/netplan/00-installer-config.yaml",
+      "echo '      routes: ' | sudo tee -a /etc/netplan/00-installer-config.yaml",
+      "echo '      - to: 10.8.0.0/24 ' | sudo tee -a /etc/netplan/00-installer-config.yaml",
+      "echo '        via: 10.1.1.254 ' | sudo tee -a /etc/netplan/00-installer-config.yaml",
+      "echo '        scope: link' | sudo tee -a /etc/netplan/00-installer-config.yaml",
+      "sudo ip addr add 10.1.1.14/24 dev ens33",
+      "sudo chown -R analyste: /home/analyste; sudo mkdir /media/evidences;",
+      "sudo mount -t cifs -o username=root,password=,uid=1001,gid=1001 //10.1.1.15/evidences/ /media/evidences; sudo mkdir /media/evidences/cuckoo-analyses; sudo umount /media/evidences",
+      "echo '//10.1.1.15/evidences/cuckoo-analyses /media/evidences cifs username=root,password=,uid=1001,gid=1001,iocharset=utf8,mfsymlinks 0 0' | sudo tee -a /etc/fstab; sudo mount -a",
+      "sudo apt install -y ufw",
+      "sudo sed -i '10iCOMMIT' /etc/ufw/before.rules",
+      "sudo sed -i '10i-A PREROUTING -i virbr0 -d 192.168.122.1 -p tcp --dport 9200 -j DNAT --to-destination 10.1.1.11:9200' /etc/ufw/before.rules",
+      "sudo sed -i '10i-A PREROUTING -i virbr0 -d 10.1.1.0/24 -j DNAT --to 127.0.0.1' /etc/ufw/before.rules",
+      "sudo sed -i '10i:PREROUTING ACCEPT [0:0]' /etc/ufw/before.rules",
+      "sudo sed -i '10i*nat' /etc/ufw/before.rules",
+      "sudo ufw allow in on ens32 to any port 22 proto tcp # SSH",
+      "sudo ufw allow in on ens33 to any port 22 proto tcp # SSH",
+      "sudo ufw allow in on ens32 to any port 8000 proto tcp # CUCKOO Web",
+      "sudo ufw allow in on ens33 to any port 8000 proto tcp # CUCKOO Web",
+      "sudo ufw allow in on virbr0 to any port 2042 proto tcp # Cuckoo result server",
+      "sudo ufw allow in on virbr0 to any port 53 proto udp # DNS",
+      "yes y | sudo ufw enable",
+    ]
+  }
+
+  provisioner "file" {
+    source = "./SCRIPTS/capev2-win10.sh"
+    destination = "$HOME/capev2-win10.sh"
+  }
+
+  provisioner "local-exec" {
+    command = "scp -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ../packer/FILES/analyste.key ../packer/ova/PACKER-cuckooVM/win10/Win10.qcow2 analyste@${self.ip_address}:/var/lib/libvirt/images/;  ssh -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i ../packer/FILES/analyste.key -t analyste@${self.ip_address} 'chmod +x $HOME/capev2-win10.sh; $HOME/capev2-win10.sh; sudo netplan apply; sudo reboot'"
+  }
+
+}
