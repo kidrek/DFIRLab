@@ -1,0 +1,87 @@
+{
+  "builders": [
+    {
+      "type": "vmware-iso",
+      "name": "template-Ubuntu-2004",
+      "vm_name": "template-Ubuntu-2004",
+      "guest_os_type": "ubuntu-64",
+
+      "iso_url": "../ISO/ubuntu-20.04.1-live-server-amd64.iso",
+      "iso_checksum": "md5:f3a306f40e4a313fb5a584d73b3dee8f",
+      "Version": "12",
+      "vmx_data": {
+        "ethernet0.networkName": "{{ user `esxi_network_portgroup` }}",
+        "ethernet0.virtualDev": "e1000",
+        "ethernet0.present": "TRUE",
+        "virtualHW.version": "10",
+        "scsi0.virtualDev": "lsisas1068",
+        "vhv.enable": "TRUE"
+      },
+
+      "remote_type": "esx5",
+      "remote_host": "{{ user `esxi_host` }}",
+      "remote_username": "{{ user `esxi_user` }}",
+      "remote_password": "{{ user `esxi_password` }}",
+      "remote_datastore": "{{ user `esxi_datastore` }}",
+      "skip_validate_credentials": true,
+      "format": "ova",
+      "output_directory": "../ova/",
+      "memory": 1024,
+
+      "boot_wait": "2s",
+      "boot_command": [
+          "<wait><esc><wait>",
+          "<wait><esc><wait>",
+          "<f6><esc>",
+          "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+          "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+          "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+          "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+          "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+          "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+          "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+          "<bs><bs><bs><bs><bs><bs><bs><bs><bs><bs>",
+          "<bs><bs><bs>",
+          "initrd=/casper/initrd ",
+          "autoinstall ",
+          "ds=nocloud-net;s=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ ",
+          "<enter>"
+          ],
+
+      "http_directory": "http",
+
+      "communicator": "ssh",
+      "ssh_username": "analyste",
+      "ssh_private_key_file":"../FILES/analyste.key",
+      "ssh_keypair_name":"analyste.key",
+      "ssh_pty": true,
+      "ssh_timeout": "20m",
+      "ssh_handshake_attempts": "100",
+
+      "shutdown_command": "echo Packer | sudo -S shutdown -P now",
+      "headless": true,
+      "vnc_disable_password": true,
+      "vnc_bind_address": "127.0.0.1",
+      "keep_registered": true
+
+
+    }
+  ],
+
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": [
+        "sudo apt update && sudo apt upgrade -y",
+        "sudo apt install -y open-vm-tools htop net-tools ifplugd resolvconf",
+        "#sudo sed -i 's|dhcp4: true|&\\n      dhcp-identifier: mac|' /etc/netplan/00-installer-config.yaml",
+        "sudo sed -i 's|GRUB_CMDLINE_LINUX_DEFAULT=.*|GRUB_CMDLINE_LINUX_DEFAULT=\"ipv6.disable=1\"|' /etc/default/grub",
+        "sudo update-grub",
+        "sudo apt-get clean",
+        "#sudo rm -f /etc/cloud/cloud.cfg.d/50-curtin-networking.cfg",
+        "sudo rm -f /etc/cloud/cloud.cfg.d/curtin-preserve-sources.cfg",
+        "sudo rm -f /etc/cloud/cloud.cfg.d/subiquity-disable-cloudinit-networking.cfg"
+      ]
+    }
+  ]
+}
