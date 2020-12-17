@@ -57,15 +57,15 @@
       "destination": "/home/analyste/firefox_profile.tar.gz"
     },
     {
+      "type": "file",
+      "source": "../FILES/secubian-vmware-share-automount",
+      "destination": "/tmp/secubian-vmware-share-automount"
+    },
+    {
       "type": "shell",
       "inline": [
         "sudo apt update && sudo apt upgrade -y",
-        "sudo apt install -y open-vm-tools-desktop htop net-tools ifplugd resolvconf sudo vim",
-        "sudo apt install -y apt-transport-https ca-certificates curl gnupg-agent software-properties-common",
-        "sudo add-apt-repository \"deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable\"",
-        "curl -fsSL https://download.docker.com/linux/debian/gpg | sudo apt-key add -",
-        "sudo apt update; export DEBIAN_FRONTEND=noninteractive; sudo -E bash -c 'apt install -y python3-pip git-core clamav forensics-full libvshadow-utils qemu-utils libevtx-utils tcpdump tshark cifs-utils docker-ce docker-ce-cli containerd.io'",
-        "sudo wget $(curl -sL https://api.github.com/repos/docker/compose/releases/latest | jq -r '.assets[].browser_download_url' | grep -i linux | grep -v sha256) -o /usr/local/bin/docker-compose; chmod +x /usr/local/bin/docker-compose;",
+        "sudo apt install -y open-vm-tools-desktop htop net-tools ifplugd jq resolvconf sudo vim",
         "echo 'alias ll=\"ls -la\" >> $HOME/.bashrc'; echo 'alias ll=\"ls -la\"' | sudo tee -a /root/.bashrc;",
         "echo 'set mouse-=a' > $HOME/.vimrc; echo 'set mouse-=a' | sudo tee /root/.vimrc",
         "echo 'auto eth0' | sudo tee -a /etc/network/interfaces",
@@ -74,17 +74,8 @@
         "sudo sed -i -e 's/GRUB_CMDLINE_LINUX=.*/GRUB_CMDLINE_LINUX=\"net.ifnames=0 biosdevname=0\"/g' /etc/default/grub",
         "sudo grub-mkconfig -o /boot/grub/grub.cfg",
         "sudo sed -i -e 's/INTERFACES=.*/INTERFACES=\"eth0\"/g' /etc/default/ifplugd",
-        "sudo docker run log2timeline/plaso log2timeline.py --version",
-        "sudo git clone https://github.com/Neo23x0/Loki.git /opt/Loki; cd /opt/Loki; sudo apt install -y python-pip; sudo pip2 install -r requirements.txt; yes yes | sudo python2 loki.py --update",
-        "sudo git clone https://github.com/kidrek/docker-capa.git /opt/docker-capa; cd /opt/docker-capa; sudo docker build -t capa .",
-        "sudo apt update; sudo apt -y install libpcre3 libpcre3-dbg libpcre3-dev build-essential autoconf automake libtool libpcap-dev libnet1-dev libyaml-0-2 libyaml-dev zlib1g zlib1g-dev libmagic-dev libcap-ng-dev libjansson-dev pkg-config rustc cargo",
-       "cd /opt/; sudo wget --no-check-certificate https://www.openinfosecfoundation.org/download/suricata-5.0.4.tar.gz; sudo tar xvzf suricata-5.0.4.tar.gz; cd suricata-5.0.4; sudo ./configure --enable-nfqueue --prefix=/usr --sysconfdir=/etc --localstatedir=/var; sudo make; sudo make install-full",
-       "cd /opt/; sudo wget https://gist.githubusercontent.com/andreafortuna/29c6ea48adf3d45a979a78763cdc7ce9/raw/4ec711d37f1b428b63bed1f786b26a0654aa2f31/malware_yara_rules.py -O ./malware_yara_rules.py; sudo mkdir rules 2>/dev/null; sudo python malware_yara_rules.py",
-       "echo 'docker run -v $(pwd):/data log2timeline/plaso log2timeline --no_dependencies_check -u -q --partitions all --volumes all -z UTC --yara_rules /data/malware_rules.yar -f /data/filter_windows.txt  /data/evidences.plaso /data/<evidence>' | sudo tee /opt/readme_plaso.txt",
-       "echo 'docker run -v $(pwd):/data log2timeline/plaso psort -o l2tcsv -w /data/evidence-timeline.csv /data/evidence.plaso' | sudo tee -a /opt/readme_plaso.txt",
-      "mkdir -p /home/analyste/Documents/DFIR",
-      "cd /home/analyste/Documents/DFIR; wget https://raw.githubusercontent.com/log2timeline/plaso/master/data/filter_windows.txt",
-      "cd /home/analyste/; tar xvzf firefox_profile.tar.gz"
+        "cd /home/analyste/; tar xvzf firefox_profile.tar.gz",
+        "sudo mv /tmp/secubian-vmware-share-automount /usr/local/bin/secubian-vmware-share-automount; sudo chmod +x /usr/local/bin/secubian-vmware-share-automount"
         ]
     },
     {
