@@ -18,6 +18,10 @@
         ],
         [
           "-drive",
+          "file=../ISO/win10_19041.264.200511-0456.vb_release_svc_refresh_CLIENTENTERPRISEEVAL_OEMRET_x64FRE_en-us.iso,media=cdrom,index=2"
+        ],
+        [
+          "-drive",
           "file=../ISO--drivers/virtio-win.iso,media=cdrom,index=3"
         ],
         [
