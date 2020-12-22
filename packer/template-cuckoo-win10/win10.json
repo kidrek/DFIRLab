@@ -18,7 +18,7 @@
         ],
         [
           "-drive",
-          "file=../ISO--drivers/virtio-win-0.1.185.iso,media=cdrom,index=3"
+          "file=../ISO--drivers/virtio-win.iso,media=cdrom,index=3"
         ],
         [
           "-m",
@@ -55,7 +55,7 @@
         "../SCRIPTS/enable-winrm.ps1",
         "../SCRIPTS/fixnetwork.ps1"
       ],
-      "headless": false
+      "headless": true
     }
   ],
   "provisioners": [
