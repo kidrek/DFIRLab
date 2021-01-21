@@ -24,6 +24,8 @@
       "remote_password": "{{ user `esxi_password` }}",
       "remote_datastore": "{{ user `esxi_datastore` }}",
       "skip_validate_credentials": true,
+      "skip_export": false,
+      "keep_registered": false,
       "format": "ova",
       "output_directory": "../ova/",
       "memory": 1024,
@@ -61,10 +63,7 @@
       "shutdown_command": "echo Packer | sudo -S shutdown -P now",
       "headless": true,
       "vnc_disable_password": true,
-      "vnc_bind_address": "127.0.0.1",
-      "keep_registered": true
-
-
+      "vnc_bind_address": "127.0.0.1"
     }
   ],
 

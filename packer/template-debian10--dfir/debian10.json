@@ -22,9 +22,10 @@
       "remote_password": "{{ user `esxi_password` }}",
       "remote_datastore": "{{ user `esxi_datastore` }}",
       "skip_validate_credentials": true,
+      "skip_export": false,
+      "keep_registered": false,
       "format": "ova",
       "output_directory": "../ova/",
-      "skip_export": true,
 
       "iso_url": "../ISO/debian-10.6.0-amd64-netinst.iso",
       "iso_checksum": "md5:42c43392d108ed8957083843392c794b",
