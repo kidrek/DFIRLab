@@ -22,6 +22,8 @@
       "remote_password": "{{ user `esxi_password` }}",
       "remote_datastore": "{{ user `esxi_datastore` }}",
       "skip_validate_credentials": true,
+      "skip_export": false,
+      "keep_registered": false,
       "format": "ova",
       "output_directory": "../ova/",
 
@@ -45,8 +47,7 @@
       "vnc_disable_password": true,
       "vnc_bind_address": "127.0.0.1",
       "vnc_over_websocket": true,
-      "insecure_connection": true,
-      "keep_registered": false
+      "insecure_connection": true
     }
   ],
   "provisioners": [
