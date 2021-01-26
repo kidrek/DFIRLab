@@ -47,8 +47,7 @@
       "vnc_disable_password": true,
       "vnc_bind_address": "127.0.0.1",
       "vnc_over_websocket": true,
-      "insecure_connection": true,
-      "keep_registered": true
+      "insecure_connection": true
     }
   ],
   "provisioners": [
@@ -76,12 +75,23 @@
         "sudo grub-mkconfig -o /boot/grub/grub.cfg",
         "sudo sed -i -e 's/INTERFACES=.*/INTERFACES=\"eth0\"/g' /etc/default/ifplugd",
         "cd /home/analyste/; tar xvzf firefox_profile.tar.gz",
-        "sudo mv /tmp/secubian-vmware-share-automount /usr/local/bin/secubian-vmware-share-automount; sudo chmod +x /usr/local/bin/secubian-vmware-share-automount"
+        "sudo mv /tmp/secubian-vmware-share-automount /usr/local/bin/secubian-vmware-share-automount; sudo chmod +x /usr/local/bin/secubian-vmware-share-automount",
+        "#sudo mv /tmp/memory_autoanalyse.sh /opt/memory_autoanalyse.sh; chmod +x /home/analyste/Desktop/DFIR_tools/memory_autoanalyse.sh"
         ]
     },
     {
       "type": "shell",
       "script": "../SCRIPTS/debian10--dfir_setup.sh"
+    },
+    {
+      "type": "file",
+      "source": "../../terraform/SCRIPTS/memory_autoanalyse.sh",
+      "destination": "/home/analyste/Desktop/DFIR-tools/memory_autoanalyse.sh"
+    },
+    {
+      "type": "file",
+      "source": "../FILES/kibana--dashboard-volatility-processes-investigation.ndjson",
+      "destination": "/home/analyste/Desktop/DFIR-tools/kibana/kibana--dashboard-volatility-processes-investigation.ndjson"
     }
   ]
 }

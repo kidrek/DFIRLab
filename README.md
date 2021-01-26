@@ -133,6 +133,8 @@ Voici les actions à mener :
 * Activer le SSH.
 * Configurer le SSH pour autoriser une authentification avec la clé privée générée précédemment, ou veiller à ce que le compte utilisateur tsurugi ait comme mot de passe "tsurugi".
 
+--
+**!! Afin de pallier cette problématique, j'ai débuté la conception d'un template basé sur Debian10 intégrant une grande partie des outils utils lors d'une investigation numérique. Vous pouvez retrouver davantage de détails dans le fichier [Readme.md](https://github.com/kidrek/DFIRLab/tree/master/packer/template-debian10--dfir) qui lui est dédié.**
 
 ### 2.2. Déploiement de la plateforme via Terraform
 
@@ -165,15 +167,11 @@ Host *
 ## 3. Analyse des preuves
 
 ### 3.1 Analyse statique
-#### via Tsurugi
-La distribution Tsurugi est composée de nombreux si ce n'est de l'intégralité des outils nécessaires pour mener à bien une investigation numérique.
-Les preuves sont accessibles via le partage réseau fourni par le serveur Samba.
-
-Seul le script ```/media/evidences/MEMORY/memory_autoanalyse.sh``` a été pour le moment ajouté. Il permet d'analyser de manière automatisée un prélèvement mémoire d'un système Windows. 
-Il va déterminer seul le profil adéquat puis exécuter les différents plugins de l'outil **Volatility**. Les résultats seront analysés à leur tour par **Loki**, **Clamav** et **Yara** puis envoyés à l'instance **ElasticSearch**.
+#### .. via Debian10--Dfir
+Comme évoqué précédemment, j'ai débuté la conception d'un template basé sur Debian10 intégrant une grande partie des outils utils lors d'une investigation numérique. Vous pouvez retrouver davantage de détails dans le fichier [Readme.md](https://github.com/kidrek/DFIRLab/tree/master/packer/template-debian10--dfir) qui lui est dédié.
 
 
-#### via la machine virtuelle Win10
+#### .. via la machine virtuelle Win10
 
 
 ### 3.2 Analyse dynamique

@@ -9,6 +9,11 @@ rm -rf $DIRECTORY/$NAME
 ## Remove old log file
 rm -f build.log
 
+## Generate SSH Keys
+if [ ! -f ../FILES/analyste.key ]; then
+  echo "Generate SSH keys"; yes yes | ssh-keygen -q -t rsa -N "" -f ../FILES/analyste.key -b 4096 -C "analyste@dfirlab.local"
+fi
+
 ## Generate preseed with strong password
 password_root=`../SCRIPTS/generate-password.sh`
 #password_analyste=`../SCRIPTS/generate-password.sh`
