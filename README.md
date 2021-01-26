@@ -33,6 +33,7 @@ Le déploiement de la plateforme est quant à lui assuré par l'outil Terraform.
 Il est préférable de dédier un serveur virtuel sous Linux de préférence pour y installer Packer et Terraform, pour faciliter la génération des templates et de leur déploiement.
 
 Pré-requis logiciels : 
+
 * Terraform
 * Packer 
 * Ovftool
@@ -134,7 +135,10 @@ Voici les actions à mener :
 * Configurer le SSH pour autoriser une authentification avec la clé privée générée précédemment, ou veiller à ce que le compte utilisateur tsurugi ait comme mot de passe "tsurugi".
 
 --
-**!! Afin de pallier cette problématique, j'ai débuté la conception d'un template basé sur Debian10 intégrant une grande partie des outils utils lors d'une investigation numérique. Vous pouvez retrouver davantage de détails dans le fichier [Readme.md](https://github.com/kidrek/DFIRLab/tree/master/packer/template-debian10--dfir) qui lui est dédié.**
+**!! Afin de pallier cette problématique, j'ai débuté la conception d'un template basé sur Debian10 intégrant une grande partie des outils utils lors d'une investigation numérique. 
+L'intégration du système Tsurugi va être petit à petit abandonné.
+
+Vous pouvez retrouver davantage de détails concernant le template "Debian10--dfir" dans le fichier [Readme.md](https://github.com/kidrek/DFIRLab/tree/master/packer/template-debian10--dfir) qui lui est dédié.**
 
 ### 2.2. Déploiement de la plateforme via Terraform
 
