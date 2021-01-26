@@ -10,7 +10,7 @@ sudo apt update; export DEBIAN_FRONTEND=noninteractive; echo "wireshark-common w
 
 ## Zsh
 sudo apt update; sudo apt install -y zsh
-chsh -s /bin/zsh analyse; sudo chsh -s /bin/zsh root
+sudo chsh -s /bin/zsh analyste; sudo chsh -s /bin/zsh root
 cd $HOME; wget https://github.com/robbyrussell/oh-my-zsh/raw/master/tools/install.sh -O - | zsh
 cp .oh-my-zsh/templates/zshrc.zsh-template $HOME/.zshrc; source $HOME/.zshrc
 
@@ -185,7 +185,7 @@ sudo mkdir -p data/beagle
 # RUN : docker run -v "$TOOLS_DIR/docker-beagle/data/beagle":"/data/beagle" -p 8000:8000 beagle
 
 sudo git clone https://github.com/ahmedkhlief/APT-Hunter.git $TOOLS_DIR/APT-Hunter
-cd $TOOLS_DIR/APT-Hunter; pip3 install -r Requirements.txt; pip3 install pandas
+cd $TOOLS_DIR/APT-Hunter; sudo pip3 install -r requirements.txt; sudo pip3 install pandas
 
 ########################## Bulk_extractor
 sudo apt install -y libewf-dev openjdk-11-jdk flex
