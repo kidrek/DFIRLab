@@ -27,8 +27,8 @@
       "format": "ova",
       "output_directory": "../ova/",
 
-      "iso_url": "../ISO/debian-10.6.0-amd64-netinst.iso",
-      "iso_checksum": "md5:42c43392d108ed8957083843392c794b",
+      "iso_url": "../ISO/debian-10.7.0-amd64-netinst.iso",
+      "iso_checksum": "md5:7227c779619e6c8a0a1b0f55d10c6270",
       "boot_wait": "5s",
       "boot_command": [
         "<esc><wait>",
