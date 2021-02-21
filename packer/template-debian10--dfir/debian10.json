@@ -67,6 +67,16 @@
       "destination": "/tmp/secubian-vmware-share-automount"
     },
     {
+      "type": "file",
+      "source": "../FILES/debian_sysctl.conf.tpl",
+      "destination": "/tmp/sysctl.conf"
+    },
+    {
+      "type": "file",
+      "source": "../FILES/iptables.sh",
+      "destination": "/tmp/iptables.sh"
+    },
+    {
       "type": "shell",
       "inline": [
         "sudo apt update && sudo apt upgrade -y",
@@ -81,6 +91,8 @@
         "sudo sed -i -e 's/INTERFACES=.*/INTERFACES=\"eth0\"/g' /etc/default/ifplugd",
         "cd /home/analyste/; tar xvzf firefox_profile.tar.gz",
         "sudo mv /tmp/secubian-vmware-share-automount /usr/local/bin/secubian-vmware-share-automount; sudo chmod +x /usr/local/bin/secubian-vmware-share-automount",
+        "sudo mv /tmp/sysctl.conf /etc/sysctl.conf",
+        "sudo mv /tmp/iptables.sh /root; sudo chmod 500 /root/iptables.sh; sudo ln -s /root/iptables.sh /etc/network/if-pre-up.d/iptables",
         "#sudo mv /tmp/memory_autoanalyse.sh /opt/memory_autoanalyse.sh; chmod +x /home/analyste/Desktop/DFIR_tools/memory_autoanalyse.sh"
         ]
     },
