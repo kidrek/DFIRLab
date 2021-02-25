@@ -126,6 +126,7 @@ cd $TOOLS_DIR/; sudo wget https://gist.githubusercontent.com/andreafortuna/29c6e
 sudo git clone https://github.com/Neo23x0/Loki.git $TOOLS_DIR/Loki; cd $TOOLS_DIR/Loki; sudo apt install -y python-pip; sudo pip2 install -r requirements.txt; yes yes | sudo python2 loki.py --update
 ########################### CAPA
 sudo git clone https://github.com/kidrek/docker-capa.git $TOOLS_DIR/docker-capa; cd $TOOLS_DIR/docker-capa; sudo docker build -t capa .
+echo 'alias docker-capa="sudo docker run -it -v $(pwd):/home/capa capa $@"' | tee -a $HOME/.zshrc
 ########################### SURICATA
 sudo apt update; sudo apt -y install libpcre3 libpcre3-dbg libpcre3-dev build-essential autoconf automake libtool libpcap-dev libnet1-dev libyaml-0-2 libyaml-dev zlib1g zlib1g-dev libmagic-dev libcap-ng-dev libjansson-dev pkg-config rustc cargo
 cd $TOOLS_DIR/; sudo wget --no-check-certificate https://www.openinfosecfoundation.org/download/suricata-5.0.4.tar.gz; sudo tar xvzf suricata-5.0.4.tar.gz; cd suricata-5.0.4; sudo ./configure --enable-nfqueue --prefix=/usr --sysconfdir=/etc --localstatedir=/var; sudo make; sudo make install-full
@@ -140,6 +141,8 @@ sudo chown -R elk: $TOOLS_DIR/docker-elk
 sudo -u elk git clone https://github.com/deviantony/docker-elk.git $TOOLS_DIR/docker-elk
 sudo -u elk sed -i 's/xpack.security.enabled: true/xpack.security.enabled: false/g'  $TOOLS_DIR/docker-elk/elasticsearch/config/elasticsearch.yml
 cd $TOOLS_DIR/docker-elk; sudo -u elk docker-compose up -d
+echo 'alias docker-elk--start="cd /home/analyste/Desktop/DFIR-tools/docker-elk; sudo docker-compose up -d; sleep 40; firefox http://127.0.0.1:5601; clear; echo \"Kibana access : http://127.0.0.1:5601\""' | tee -a $HOME/.zshrc
+echo 'alias docker-elk--stop="cd /home/analyste/Desktop/DFIR-tools/docker-elk; sudo docker-compose down; clear;"' | tee -a $HOME/.zshrc
 
 ########################### Timesketch
 ### Timesketch docker
@@ -148,7 +151,9 @@ sudo cp -rf $TOOLS_DIR/sigma/rules/windows/ timesketch/etc/timesketch/sigma/rule
 sudo cp -rf $TOOLS_DIR/sigma/rules/linux/ timesketch/etc/timesketch/sigma/rules/
 cd $TOOLS_DIR/timesketch/etc/timesketch; sudo ln -s . data
 cd $TOOLS_DIR/timesketch; sudo docker-compose up -d
-echo "cd $TOOLS_DIR/timesketch; sudo -u elk docker-compose exec timesketch-web tsctl add_user -u analyste -p analyste 1>/dev/null 2>&1" | sudo tee -a /home/analyste/.bashrc
+#echo "cd $TOOLS_DIR/timesketch; sudo -u elk docker-compose exec timesketch-web tsctl add_user -u analyste -p analyste 1>/dev/null 2>&1" | sudo tee -a /home/analyste/.bashrc
+echo 'alias docker-timesketch--start="cd /home/analyste/Desktop/DFIR-tools/timesketch; sudo docker-compose up -d; sleep 10; sudo -u elk docker-compose exec timesketch-web tsctl add_user -u analyste -p analyste; firefox http://127.0.0.1; clear; echo \"Timesketch access : http://127.0.0.1\""' | tee -a $HOME/.zshrc
+echo 'alias docker-timesketch--stop="cd /home/analyste/Desktop/DFIR-tools/timesketch; sudo docker-compose down; clear"'  | tee -a $HOME/.zshrc
 
 ###########################################
 ## Log2timeline
@@ -192,3 +197,20 @@ sudo apt install -y libewf-dev openjdk-11-jdk flex
 sudo git clone https://github.com/simsong/bulk_extractor.git $TOOLS_DIR/bulk_extractor
 cd $TOOLS_DIR/bulk_extractor; sudo chmod +x bootstrap.sh; sudo ./bootstrap.sh
 sudo ./configure; sudo make; sudo make install
+
+
+
+
+###########################################
+########### DISABLE ALL DOCKER CONTAINER Autostart
+for dock in `sudo docker container ls -a --format {{.Names}}`; do sudo docker update --restart=no $dock; done
+
+############  CLEAN
+sudo apt update
+sudo apt upgrade -y
+sudo apt autoremove -y
+sudo apt autoclean -y
+
+########### ENABLE AUTO-UPDATE 
+sudo apt install -y unattended-upgrades
+sudo dpkg-reconfigure -plow unattended-upgrades
