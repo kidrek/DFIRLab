@@ -132,7 +132,6 @@ do
         curl -XPUT localhost:9200/broken -d'{"settings":{"index.mapping.ignore_malformed": true}}' -H 'Content-Type: application/json'
         psort.py -z UTC -o elastic --server $ES_host --port $ES_port --flush_interval 50 --raw_fields --index_name $ES_index.$DMP_filename.timeline $dumpmem.output/memory-timeline.plaso
       fi
-      exit 0
 
       #### Extract EVTx files
       mkdir -p $dumpmem.output/evtx/
