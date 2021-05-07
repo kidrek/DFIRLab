@@ -13,5 +13,5 @@ cd -
 
 # Download Debian iso
 cd packer/ISO
-wget https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-10.8.0-amd64-netinst.iso
+wget https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-10.9.0-amd64-netinst.iso
 cd -
