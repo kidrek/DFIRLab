@@ -28,11 +28,11 @@
       "output_directory": "../ova/",
 
       "iso_urls": [
-	"../ISO/debian-10.8.0-amd64-netinst.iso",
-        "https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-10.8.0-amd64-netinst.iso"
+	      "../ISO/debian-10.9.0-amd64-netinst.iso",
+        "https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-10.9.0-amd64-netinst.iso"
       ],
       "iso_target_path":"../ISO/",
-      "iso_checksum": "md5:e221f43f4fdd409250908fc4305727d4",
+      "iso_checksum": "md5:73e74eef3d998d522f92295016d92fdc",
 
       "boot_wait": "5s",
       "boot_command": [
