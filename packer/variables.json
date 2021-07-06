@@ -1,7 +1,12 @@
 {
-  "esxi_host": "<esxi_host>",
-  "esxi_user": "<esxi_username>",
-  "esxi_password": "<esxi_password>",
-  "esxi_datastore": "<esxi_datastore>",
-  "esxi_network_portgroup": "<esxi_network_portgroup>"
+  "esxi_host": "",
+  "esxi_user": "",
+  "esxi_password": "",
+  "esxi_datastore": "",
+  "esxi_network_portgroup": "",
+  "iso_debian": "https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-10.10.0-amd64-netinst.iso",
+  "iso_debian_hash": "md5:c7d0e562e589e853b5d00563b4311720",
+  "guest_os_type_debian": "debian10-64",
+  "skip_export": "true",
+  "keep_registered": "true"
 }

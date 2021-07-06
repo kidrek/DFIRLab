@@ -7,7 +7,7 @@
       "cpus":"4",
       "memory":"2048",
       "Version": "12",
-      "guest_os_type": "debian10-64",
+      "guest_os_type": "{{ user `guest_os_type_debian` }}",
       "disk_additional_size": 50000,
       "vmx_data": {
         "ethernet0.networkName": "{{ user `esxi_network_portgroup` }}",
@@ -23,17 +23,17 @@
       "remote_password": "{{ user `esxi_password` }}",
       "remote_datastore": "{{ user `esxi_datastore` }}",
       "skip_validate_credentials": true,
-      "skip_export": false,
-      "keep_registered": false,
+      "skip_export": "{{ user `skip_export` }}",
+      "keep_registered": "{{ user `keep_registered` }}",
       "format": "ova",
       "output_directory": "../ova/",
 
       "iso_urls": [
-	"../ISO/debian-10.8.0-amd64-netinst.iso",
-        "https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-10.8.0-amd64-netinst.iso"
+	"../ISO/debian.iso",
+        "{{ user `iso_debian` }}"
       ],
       "iso_target_path":"../ISO/",
-      "iso_checksum": "md5:e221f43f4fdd409250908fc4305727d4",
+      "iso_checksum": "{{ user `iso_debian_hash` }}",
 
       "boot_wait": "5s",
       "boot_command": [
